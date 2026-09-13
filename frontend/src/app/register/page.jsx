@@ -3,46 +3,31 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { GraduationCap, Building, UserCheck, BookOpen, ShieldCheck, MapPin, Camera, CheckCircle, ArrowRight, Scan } from 'lucide-react';
+import { Building, MapPin, ShieldCheck, ArrowRight, CheckCircle, Upload, Scan } from 'lucide-react';
 import Logo from '@/components/shared/Logo';
 import api from '@/utils/api';
 
-export default function UnifiedRegisterPage() {
+export default function RegisterPage() {
   const router = useRouter();
-  const [role, setRole] = useState('student'); // 'institution' | 'teacher' | 'student'
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [fetchingGps, setFetchingGps] = useState(false);
 
-  // Form states
   const [formData, setFormData] = useState({
-    // Institution fields
     institution_name: '',
+    institution_code: '',
     admin_name: '',
     admin_email: '',
     password: '',
+    confirm_password: '',
     campus_lat: '',
     campus_lng: '',
     geofence_radius: '100',
-    
-    // Teacher fields
-    teacher_id: '',
-    teacher_name: '',
-    teacher_email: '',
-    department: 'Computer Science & AI',
-    subjects: 'CS101 Algorithms, CS102 Data Structures',
-
-    // Student fields
-    roll_number: '',
-    student_name: '',
-    student_email: '',
-    year_semester: 'Year 2 / Fall 2026',
-    face_vector: null,
   });
 
-  // GPS auto-detect for institution setup
+  // Auto-detect browser GPS coordinates for Campus Geofence
   function detectGPS() {
-    if (!navigator.geolocation) return toast.error('Geolocation is not supported.');
+    if (!navigator.geolocation) return toast.error('Geolocation is not supported by your browser.');
     setFetchingGps(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -56,60 +41,36 @@ export default function UnifiedRegisterPage() {
       },
       () => {
         setFetchingGps(false);
-        toast.error('Unable to fetch location.');
+        toast.error('Unable to fetch location. Please enter coordinates manually.');
       },
-      { enableHighAccuracy: true }
+      { enableHighAccuracy: true, timeout: 8000 }
     );
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (!formData.institution_name.trim()) return toast.error('Enter institution name.');
+    if (!formData.admin_email.trim()) return toast.error('Enter admin email.');
+    if (formData.password.length < 6) return toast.error('Password must be at least 6 characters.');
+    if (formData.password !== formData.confirm_password) return toast.error('Passwords do not match.');
+
     setLoading(true);
-
     try {
-      if (role === 'institution') {
-        if (!formData.institution_name || !formData.admin_email || !formData.password)
-          return toast.error('Fill in all required institution fields.');
-        await api.post('/auth/register-institution', {
-          institution_name: formData.institution_name,
-          admin_name: formData.admin_name,
-          email: formData.admin_email,
-          password: formData.password,
-          office_lat: parseFloat(formData.campus_lat) || 0,
-          office_lng: parseFloat(formData.campus_lng) || 0,
-          geofence_radius_meters: parseInt(formData.geofence_radius, 10) || 100,
-        });
-        toast.success('Institution SaaS Workspace Registered!');
-      } else if (role === 'teacher') {
-        if (!formData.teacher_id || !formData.teacher_name || !formData.teacher_email)
-          return toast.error('Fill in all required teacher fields.');
-        await api.post('/employees', {
-          employee_id: formData.teacher_id,
-          name: formData.teacher_name,
-          email: formData.teacher_email,
-          department_name: formData.department,
-          designation: `Faculty / Teacher (${formData.subjects})`,
-          status: 'active',
-        });
-        toast.success('Teacher Account Registered!');
-      } else {
-        // Student
-        if (!formData.roll_number || !formData.student_name)
-          return toast.error('Fill in Student Roll Number and Name.');
-        await api.post('/employees', {
-          employee_id: formData.roll_number,
-          name: formData.student_name,
-          email: formData.student_email || `${formData.roll_number.toLowerCase()}@student.edu`,
-          department_name: formData.department,
-          designation: `Student (${formData.year_semester})`,
-          status: 'active',
-        });
-        toast.success('Student Account Registered!');
-      }
+      await api.post('/auth/register-institution', {
+        institution_name: formData.institution_name.trim(),
+        institution_code: formData.institution_code.trim() || formData.institution_name.slice(0, 4).toUpperCase(),
+        admin_name: formData.admin_name.trim(),
+        email: formData.admin_email.trim(),
+        password: formData.password,
+        office_lat: parseFloat(formData.campus_lat) || 0,
+        office_lng: parseFloat(formData.campus_lng) || 0,
+        geofence_radius_meters: parseInt(formData.geofence_radius, 10) || 100,
+      });
 
+      toast.success('Institution setup complete!');
       setSuccess(true);
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Registration failed. Try again.');
+      toast.error(err.response?.data?.message || 'Registration failed. Please check details.');
     } finally {
       setLoading(false);
     }
@@ -126,7 +87,7 @@ export default function UnifiedRegisterPage() {
               Kiosk Attendance →
             </a>
             <a href="/login" className="text-xs font-bold text-zinc-600 hover:text-black transition">
-              Login
+              Sign In
             </a>
           </div>
         </div>
@@ -139,290 +100,240 @@ export default function UnifiedRegisterPage() {
             <div className="w-16 h-16 rounded-full bg-black text-white flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="w-8 h-8" />
             </div>
-            <h2 className="text-2xl font-extrabold text-zinc-900">Registration Complete!</h2>
+            <h2 className="text-2xl font-extrabold text-zinc-900">Institution Registered!</h2>
             <p className="text-sm text-zinc-500 mt-2">
-              Your account has been provisioned under role <span className="text-black font-bold uppercase">{role}</span>.
+              Your campus workspace for <span className="font-bold text-zinc-900">{formData.institution_name}</span> is ready.
             </p>
 
             <div className="space-y-3 mt-6">
-              {role === 'teacher' ? (
-                <button
-                  onClick={() => router.push('/teacher/lecture-qr')}
-                  className="w-full py-3.5 bg-black hover:bg-zinc-800 text-white font-bold rounded-xl transition shadow-sm"
-                >
-                  Generate Subject Lecture QR Code →
-                </button>
-              ) : role === 'student' ? (
-                <button
-                  onClick={() => router.push('/attend')}
-                  className="w-full py-3.5 bg-black hover:bg-zinc-800 text-white font-bold rounded-xl transition shadow-sm"
-                >
-                  Go to Classroom Kiosk →
-                </button>
-              ) : (
-                <button
-                  onClick={() => router.push('/login')}
-                  className="w-full py-3.5 bg-black hover:bg-zinc-800 text-white font-bold rounded-xl transition shadow-sm"
-                >
-                  Go to Admin Portal Login →
-                </button>
-              )}
+              <button
+                onClick={() => router.push('/login')}
+                className="w-full py-3.5 bg-black hover:bg-zinc-800 text-white font-bold text-sm rounded-2xl transition shadow-md flex items-center justify-center gap-2"
+              >
+                <span>Login to Dean Dashboard →</span>
+              </button>
+              <a
+                href="/admin/roster-import"
+                className="block text-xs font-bold text-zinc-600 hover:text-black py-2 transition"
+              >
+                Import Class Roster (CSV) →
+              </a>
             </div>
           </div>
         ) : (
           <div className="w-full bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 shadow-xl">
             
+            {/* Header Title */}
             <div className="text-center mb-8">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-100 border border-zinc-300 text-zinc-900 text-xs font-semibold mb-3">
-                <GraduationCap className="w-4 h-4 text-black" /> Account Registration
+                <Building className="w-4 h-4 text-black" /> Institution Registration
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900">
-                Registration Portal
+                Register Institution Workspace
               </h1>
-              <p className="text-zinc-500 text-xs sm:text-sm mt-1 max-w-md mx-auto">
-                Select your role below to create your account.
+              <p className="text-zinc-500 text-xs sm:text-sm mt-1 max-w-lg mx-auto">
+                Set up your College or University account. Once registered, Deans & Admins bulk import student and teacher class rosters via CSV.
               </p>
             </div>
 
-            {/* Role Selection Tabs */}
-            <div className="grid grid-cols-3 gap-3 mb-8 p-1.5 bg-zinc-100 border border-zinc-200 rounded-2xl">
-              {[
-                { id: 'student', title: 'Student', icon: UserCheck, color: 'text-black' },
-                { id: 'teacher', title: 'Teacher / Faculty', icon: BookOpen, color: 'text-black' },
-                { id: 'institution', title: 'Institution Dean', icon: Building, color: 'text-black' },
-              ].map(item => {
-                const Icon = item.icon;
-                const active = role === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => setRole(item.id)}
-                    className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-extrabold transition-all ${
-                      active
-                        ? 'bg-black text-white shadow-sm'
-                        : 'text-zinc-600 hover:text-zinc-900'
-                    }`}
-                  >
-                    <Icon className={`w-4 h-4 ${active ? 'text-white' : item.color}`} />
-                    <span className="hidden sm:inline">{item.title}</span>
-                  </button>
-                );
-              })}
+            {/* Architecture Info Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+              <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-4 text-left">
+                <ShieldCheck className="w-5 h-5 text-black mb-2" />
+                <h4 className="text-xs font-extrabold text-zinc-900">1. Dean Registration</h4>
+                <p className="text-[11px] text-zinc-500 mt-1">Dean registers institution with admin email and secure password.</p>
+              </div>
+              <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-4 text-left">
+                <Upload className="w-5 h-5 text-black mb-2" />
+                <h4 className="text-xs font-extrabold text-zinc-900">2. Roster CSV Import</h4>
+                <p className="text-[11px] text-zinc-500 mt-1">Dean imports student & faculty lists from admin dashboard.</p>
+              </div>
+              <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-4 text-left">
+                <Scan className="w-5 h-5 text-black mb-2" />
+                <h4 className="text-xs font-extrabold text-zinc-900">3. Face ID & Kiosk</h4>
+                <p className="text-[11px] text-zinc-500 mt-1">Students activate face at <code className="text-black font-bold">/activate-face</code> using Roll Number.</p>
+              </div>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               
-              {/* STUDENT FORM */}
-              {role === 'student' && (
-                <div className="space-y-4 animate-fade-in">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-900 flex items-center gap-2">
-                    <UserCheck className="w-4 h-4" /> Student Profile & Registration
-                  </h3>
+              {/* Institution Details */}
+              <div className="space-y-4">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-900 flex items-center gap-2">
+                  <Building className="w-4 h-4 text-black" /> Institution Information
+                </h3>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Roll Number / Student ID</label>
-                      <input
-                        required
-                        type="text"
-                        className="input"
-                        placeholder="e.g. CS-2026-042"
-                        value={formData.roll_number}
-                        onChange={e => setFormData({ ...formData, roll_number: e.target.value })}
-                      />
-                    </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-700 mb-1">Institution Name *</label>
+                    <input
+                      required
+                      type="text"
+                      className="w-full bg-white border border-zinc-300 focus:border-black focus:ring-2 focus:ring-black/20 rounded-2xl px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none transition"
+                      placeholder="e.g. Stanford Institute of Technology"
+                      value={formData.institution_name}
+                      onChange={e => setFormData({ ...formData, institution_name: e.target.value })}
+                    />
+                  </div>
 
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Full Student Name</label>
-                      <input
-                        required
-                        type="text"
-                        className="input"
-                        placeholder="e.g. Alexander Vance"
-                        value={formData.student_name}
-                        onChange={e => setFormData({ ...formData, student_name: e.target.value })}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Department / Branch</label>
-                      <select
-                        className="input"
-                        value={formData.department}
-                        onChange={e => setFormData({ ...formData, department: e.target.value })}
-                      >
-                        <option value="Computer Science & AI">Computer Science & AI</option>
-                        <option value="Electrical Engineering">Electrical Engineering</option>
-                        <option value="Mechanical Engineering">Mechanical Engineering</option>
-                        <option value="Business Administration">Business Administration</option>
-                        <option value="Medical Sciences">Medical Sciences</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Year / Semester</label>
-                      <input
-                        type="text"
-                        className="input"
-                        placeholder="e.g. Year 2 / Semester 4"
-                        value={formData.year_semester}
-                        onChange={e => setFormData({ ...formData, year_semester: e.target.value })}
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-700 mb-1">Institution Code</label>
+                    <input
+                      type="text"
+                      className="w-full bg-white border border-zinc-300 focus:border-black focus:ring-2 focus:ring-black/20 rounded-2xl px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none transition"
+                      placeholder="e.g. SIT-2026"
+                      value={formData.institution_code}
+                      onChange={e => setFormData({ ...formData, institution_code: e.target.value })}
+                    />
                   </div>
                 </div>
-              )}
+              </div>
 
-              {/* TEACHER FORM */}
-              {role === 'teacher' && (
-                <div className="space-y-4 animate-fade-in">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-900 flex items-center gap-2">
-                    <BookOpen className="w-4 h-4" /> Faculty / Teacher Account Setup
-                  </h3>
+              {/* Dean / Admin Credentials */}
+              <div className="space-y-4 pt-4 border-t border-zinc-200">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-900 flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-black" /> Dean / Administrator Account Credentials
+                </h3>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Teacher / Faculty ID</label>
-                      <input
-                        required
-                        type="text"
-                        className="input"
-                        placeholder="e.g. TCH-901"
-                        value={formData.teacher_id}
-                        onChange={e => setFormData({ ...formData, teacher_id: e.target.value })}
-                      />
-                    </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-700 mb-1">Dean / Admin Full Name *</label>
+                    <input
+                      required
+                      type="text"
+                      className="w-full bg-white border border-zinc-300 focus:border-black focus:ring-2 focus:ring-black/20 rounded-2xl px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none transition"
+                      placeholder="e.g. Dr. Eleanor Vance"
+                      value={formData.admin_name}
+                      onChange={e => setFormData({ ...formData, admin_name: e.target.value })}
+                    />
+                  </div>
 
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Full Teacher Name</label>
-                      <input
-                        required
-                        type="text"
-                        className="input"
-                        placeholder="e.g. Prof. Sarah Jenkins"
-                        value={formData.teacher_name}
-                        onChange={e => setFormData({ ...formData, teacher_name: e.target.value })}
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-700 mb-1">Admin Email Address *</label>
+                    <input
+                      required
+                      type="email"
+                      className="w-full bg-white border border-zinc-300 focus:border-black focus:ring-2 focus:ring-black/20 rounded-2xl px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none transition"
+                      placeholder="dean@university.edu"
+                      value={formData.admin_email}
+                      onChange={e => setFormData({ ...formData, admin_email: e.target.value })}
+                    />
+                  </div>
 
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Work Email</label>
-                      <input
-                        required
-                        type="email"
-                        className="input"
-                        placeholder="sjenkins@university.edu"
-                        value={formData.teacher_email}
-                        onChange={e => setFormData({ ...formData, teacher_email: e.target.value })}
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-700 mb-1">Password *</label>
+                    <input
+                      required
+                      type="password"
+                      className="w-full bg-white border border-zinc-300 focus:border-black focus:ring-2 focus:ring-black/20 rounded-2xl px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none transition"
+                      placeholder="At least 6 characters"
+                      value={formData.password}
+                      onChange={e => setFormData({ ...formData, password: e.target.value })}
+                    />
+                  </div>
 
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Assigned Subjects / Courses</label>
-                      <input
-                        type="text"
-                        className="input"
-                        placeholder="e.g. CS101 Algorithms, CS102 Data Structures"
-                        value={formData.subjects}
-                        onChange={e => setFormData({ ...formData, subjects: e.target.value })}
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-700 mb-1">Confirm Password *</label>
+                    <input
+                      required
+                      type="password"
+                      className="w-full bg-white border border-zinc-300 focus:border-black focus:ring-2 focus:ring-black/20 rounded-2xl px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none transition"
+                      placeholder="Re-enter password"
+                      value={formData.confirm_password}
+                      onChange={e => setFormData({ ...formData, confirm_password: e.target.value })}
+                    />
                   </div>
                 </div>
-              )}
+              </div>
 
-              {/* INSTITUTION FORM */}
-              {role === 'institution' && (
-                <div className="space-y-4 animate-fade-in">
+              {/* Campus GPS Geofencing (Optional) */}
+              <div className="space-y-4 pt-4 border-t border-zinc-200">
+                <div className="flex items-center justify-between">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-900 flex items-center gap-2">
-                    <Building className="w-4 h-4" /> Institution Profile & Campus GPS Setup
+                    <MapPin className="w-4 h-4 text-black" /> Campus GPS Center & Geofence
                   </h3>
+                  <button
+                    type="button"
+                    onClick={detectGPS}
+                    disabled={fetchingGps}
+                    className="text-xs font-bold text-black hover:underline flex items-center gap-1.5"
+                  >
+                    <MapPin className="w-3.5 h-3.5" />
+                    {fetchingGps ? 'Detecting Location...' : 'Auto-Detect Current GPS'}
+                  </button>
+                </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Institution Name</label>
-                      <input
-                        required
-                        type="text"
-                        className="input"
-                        placeholder="e.g. Harvard University"
-                        value={formData.institution_name}
-                        onChange={e => setFormData({ ...formData, institution_name: e.target.value })}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Dean / Admin Email</label>
-                      <input
-                        required
-                        type="email"
-                        className="input"
-                        placeholder="dean@harvard.edu"
-                        value={formData.admin_email}
-                        onChange={e => setFormData({ ...formData, admin_email: e.target.value })}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Admin Password</label>
-                      <input
-                        required
-                        type="password"
-                        className="input"
-                        placeholder="••••••••"
-                        value={formData.password}
-                        onChange={e => setFormData({ ...formData, password: e.target.value })}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Geofence Radius (Meters)</label>
-                      <input
-                        type="number"
-                        className="input"
-                        placeholder="100"
-                        value={formData.geofence_radius}
-                        onChange={e => setFormData({ ...formData, geofence_radius: e.target.value })}
-                      />
-                    </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-700 mb-1">Campus Latitude</label>
+                    <input
+                      type="text"
+                      className="w-full bg-white border border-zinc-300 focus:border-black focus:ring-2 focus:ring-black/20 rounded-2xl px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none transition"
+                      placeholder="e.g. 37.774929"
+                      value={formData.campus_lat}
+                      onChange={e => setFormData({ ...formData, campus_lat: e.target.value })}
+                    />
                   </div>
 
-                  <div className="pt-2">
-                    <button
-                      type="button"
-                      onClick={detectGPS}
-                      disabled={fetchingGps}
-                      className="text-xs font-bold text-zinc-900 bg-zinc-100 hover:bg-zinc-200 px-3.5 py-2 rounded-xl border border-zinc-300 transition flex items-center gap-2"
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-700 mb-1">Campus Longitude</label>
+                    <input
+                      type="text"
+                      className="w-full bg-white border border-zinc-300 focus:border-black focus:ring-2 focus:ring-black/20 rounded-2xl px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none transition"
+                      placeholder="e.g. -122.419416"
+                      value={formData.campus_lng}
+                      onChange={e => setFormData({ ...formData, campus_lng: e.target.value })}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-700 mb-1">Geofence Radius (Meters)</label>
+                    <select
+                      className="w-full bg-white border border-zinc-300 focus:border-black focus:ring-2 focus:ring-black/20 rounded-2xl px-4 py-3 text-sm text-zinc-900 focus:outline-none transition"
+                      value={formData.geofence_radius}
+                      onChange={e => setFormData({ ...formData, geofence_radius: e.target.value })}
                     >
-                      <MapPin className="w-4 h-4" />
-                      <span>{fetchingGps ? 'Detecting GPS...' : '📍 Auto-Detect Campus GPS Coordinates'}</span>
-                    </button>
+                      <option value="50">50 Meters (Tight Campus)</option>
+                      <option value="100">100 Meters (Standard Building)</option>
+                      <option value="250">250 Meters (Medium Campus)</option>
+                      <option value="500">500 Meters (Large Campus)</option>
+                    </select>
                   </div>
                 </div>
-              )}
+              </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-4 bg-black hover:bg-zinc-800 text-white font-extrabold text-base rounded-2xl transition-all shadow-md active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <span>Register Account</span>
-                    <ArrowRight className="w-5 h-5" />
-                  </>
-                )}
-              </button>
+              {/* Submit Button */}
+              <div className="pt-6 border-t border-zinc-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p className="text-xs text-zinc-500">
+                  Already have an account?{' '}
+                  <a href="/login" className="font-bold text-black hover:underline">
+                    Sign in here
+                  </a>
+                </p>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full sm:w-auto px-8 py-4 bg-black hover:bg-zinc-800 text-white font-extrabold text-sm rounded-2xl transition shadow-md disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {loading ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <span>Register Institution Workspace</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              </div>
+
             </form>
-
           </div>
         )}
       </main>
 
-      <footer className="w-full border-t border-zinc-200 bg-white px-6 py-4 text-xs text-zinc-500 text-center">
+      {/* Footer */}
+      <footer className="w-full border-t border-zinc-200 bg-white px-6 py-4 text-xs text-zinc-500 text-center relative z-10">
         © 2026 Attendzo — Attendance System.
       </footer>
     </div>

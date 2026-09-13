@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { UserCheck, BookOpen, ShieldCheck, Lock, Mail, ArrowRight, Sparkles } from 'lucide-react';
+import { UserCheck, ShieldCheck, ArrowRight, Scan, BookOpen } from 'lucide-react';
 import Logo from '@/components/shared/Logo';
 import api from '@/utils/api';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [role, setRole] = useState('employee'); // 'employee' (Student/Faculty) | 'admin' (Dean)
+  const [role, setRole] = useState('admin'); // 'admin' (Dean) | 'employee' (Student/Faculty)
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ identifier: '', password: '' });
 
@@ -55,7 +55,7 @@ export default function LoginPage() {
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Logo size={42} />
           <a href="/register" className="text-xs font-bold text-zinc-700 hover:text-black transition">
-            Create Account →
+            Register Institution →
           </a>
         </div>
       </header>
@@ -70,24 +70,11 @@ export default function LoginPage() {
 
           <div className="mb-6">
             <h1 className="text-2xl font-extrabold text-zinc-900">Academic Portal Sign In</h1>
-            <p className="text-xs text-zinc-500 mt-1">Access your Student, Faculty, or Dean dashboard</p>
+            <p className="text-xs text-zinc-500 mt-1">Access Dean Dashboard, Teacher QR Generator, or Student Portal</p>
           </div>
 
           {/* Role Selector Tabs */}
           <div className="grid grid-cols-2 gap-2 mb-6 p-1.5 bg-zinc-100 border border-zinc-200 rounded-2xl">
-            <button
-              type="button"
-              onClick={() => setRole('employee')}
-              className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-extrabold transition-all ${
-                role === 'employee'
-                  ? 'bg-black text-white shadow-sm'
-                  : 'text-zinc-500 hover:text-zinc-900'
-              }`}
-            >
-              <UserCheck className="w-4 h-4" />
-              <span>Student / Faculty</span>
-            </button>
-
             <button
               type="button"
               onClick={() => setRole('admin')}
@@ -100,12 +87,25 @@ export default function LoginPage() {
               <ShieldCheck className="w-4 h-4" />
               <span>Dean / Admin</span>
             </button>
+
+            <button
+              type="button"
+              onClick={() => setRole('employee')}
+              className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-extrabold transition-all ${
+                role === 'employee'
+                  ? 'bg-black text-white shadow-sm'
+                  : 'text-zinc-500 hover:text-zinc-900'
+              }`}
+            >
+              <UserCheck className="w-4 h-4" />
+              <span>Student / Faculty</span>
+            </button>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4 text-left">
             <div>
               <label className="block text-xs font-semibold text-zinc-700 mb-1.5">
-                {role === 'admin' ? 'Admin Email Address' : 'Student Roll Number / Teacher ID / Email'}
+                {role === 'admin' ? 'Admin Email Address' : 'Roll Number / Teacher ID'}
               </label>
               <input
                 required
@@ -138,18 +138,33 @@ export default function LoginPage() {
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  <span>Sign In as {role === 'admin' ? 'Dean Admin' : 'Academic User'}</span>
+                  <span>Sign In as {role === 'admin' ? 'Dean Admin' : 'Student / Faculty'}</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>
           </form>
 
-          <div className="mt-6 pt-4 border-t border-zinc-200 text-xs text-zinc-500">
-            <span>Just marking attendance? </span>
-            <a href="/attend" className="text-black font-bold hover:underline">
-              Open Classroom Kiosk →
-            </a>
+          {/* Direct Access Shortcuts */}
+          <div className="mt-6 pt-4 border-t border-zinc-200 space-y-2 text-xs text-zinc-500">
+            <div className="flex items-center justify-between">
+              <span>Student Face Activation?</span>
+              <a href="/activate-face" className="text-black font-bold hover:underline flex items-center gap-1">
+                <Scan className="w-3.5 h-3.5" /> Activate Face ID →
+              </a>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Faculty Lecture QR?</span>
+              <a href="/teacher/lecture-qr" className="text-black font-bold hover:underline flex items-center gap-1">
+                <BookOpen className="w-3.5 h-3.5" /> Lecture QR →
+              </a>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Classroom Kiosk?</span>
+              <a href="/attend" className="text-black font-bold hover:underline">
+                Open Kiosk →
+              </a>
+            </div>
           </div>
 
         </div>

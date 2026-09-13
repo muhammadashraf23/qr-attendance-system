@@ -208,7 +208,7 @@ export default function QRAttendance() {
             <div className="lg:col-span-5 space-y-6 text-center lg:text-left">
               <div>
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-100 border border-zinc-300 text-zinc-900 text-xs font-semibold mb-4">
-                  <Sparkles className="w-3.5 h-3.5 text-zinc-900" /> Academic Attendance SaaS
+                  <Sparkles className="w-3.5 h-3.5 text-zinc-900" /> Classroom Attendance Kiosk
                 </div>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 tracking-tight leading-tight">
                   University & College <br />
@@ -225,7 +225,7 @@ export default function QRAttendance() {
               <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm relative overflow-hidden">
                 <div className="flex items-center justify-between text-xs text-zinc-500 mb-2 font-medium">
                   <span className="flex items-center gap-1.5 text-zinc-900 font-semibold">
-                    <Clock className="w-4 h-4 text-black" /> Kiosk Clock Engine
+                    <Clock className="w-4 h-4 text-black" /> Live Clock
                   </span>
                   <span className="bg-zinc-100 px-2.5 py-0.5 rounded-full text-zinc-800 border border-zinc-200">Campus Live Sync</span>
                 </div>
@@ -244,14 +244,14 @@ export default function QRAttendance() {
                   className="flex items-center justify-center gap-2 rounded-2xl p-3.5 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-800 hover:text-black transition text-xs font-bold group"
                 >
                   <Scan className="w-4 h-4 text-black group-hover:scale-110 transition" />
-                  <span>1-Click Face Activation</span>
+                  <span>Student Face Activation</span>
                 </a>
                 <a
                   href="/admin/roster-import"
                   className="flex items-center justify-center gap-2 rounded-2xl p-3.5 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-800 hover:text-black transition text-xs font-bold group"
                 >
                   <UserCheck className="w-4 h-4 text-black group-hover:scale-110 transition" />
-                  <span>CSV Roster Import</span>
+                  <span>Class Roster Import</span>
                 </a>
               </div>
             </div>
@@ -313,8 +313,8 @@ export default function QRAttendance() {
                     }`}>
                       <MapPin className="w-4 h-4 flex-shrink-0" />
                       <span>
-                        {gpsStatus === 'getting' && 'Verifying office GPS geofence coordinates...'}
-                        {gpsStatus === 'ok' && 'Office GPS location verified ✓'}
+                        {gpsStatus === 'getting' && 'Verifying campus GPS geofence coordinates...'}
+                        {gpsStatus === 'ok' && 'Campus GPS location verified ✓'}
                         {gpsStatus === 'denied' && 'GPS access denied — standard check-in logged'}
                       </span>
                     </div>
@@ -325,7 +325,7 @@ export default function QRAttendance() {
                     <div className="animate-fade-in pt-4 border-t border-zinc-200 space-y-4">
                       <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-4 flex items-center justify-between">
                         <div>
-                          <p className="text-xs text-zinc-500 font-medium">Employee Name</p>
+                          <p className="text-xs text-zinc-500 font-medium">Student / Employee Name</p>
                           <p className="text-lg font-bold text-zinc-900">{empInfo.employee_name}</p>
                           <p className="text-xs text-zinc-700 font-mono mt-0.5">{empInfo.employee_id}</p>
                         </div>
@@ -389,11 +389,11 @@ export default function QRAttendance() {
       {/* Footer */}
       <footer className="w-full border-t border-zinc-200 bg-white px-6 py-4 relative z-10 text-xs text-zinc-500">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p>© 2026 SmartAttendance Cloud (Attendzo). Enterprise SaaS Platform.</p>
+          <p>© 2026 Attendzo — Attendance System.</p>
           <div className="flex items-center gap-6 font-medium">
             <a href="/attend?mode=face" className="hover:text-black transition">👤 Face Biometrics</a>
             <a href="/login" className="hover:text-black transition">🔑 Portal Login</a>
-            <a href="/admin" className="hover:text-black transition">🛡️ HR Admin</a>
+            <a href="/admin" className="hover:text-black transition">🛡️ Dean Admin</a>
           </div>
         </div>
       </footer>
