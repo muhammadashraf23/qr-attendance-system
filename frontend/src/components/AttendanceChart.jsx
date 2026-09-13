@@ -7,8 +7,8 @@ import {
 } from 'recharts';
 import { format } from 'date-fns';
 
-const COLORS = { present: '#2E7D32', absent: '#E53935', leave: '#1976D2', late: '#F57C00' };
-const PIE_COLORS = ['#2E7D32','#66BB6A','#E53935','#F57C00','#1976D2','#9C27B0','#FF5722','#607D8B'];
+const COLORS = { present: '#000000', absent: '#71717a', leave: '#3f3f46', late: '#a1a1aa' };
+const PIE_COLORS = ['#000000','#27272a','#3f3f46','#52525b','#71717a','#a1a1aa','#d4d4d8','#e4e4e7'];
 
 function useIsMounted() {
   const [mounted, setMounted] = useState(false);
@@ -33,12 +33,12 @@ export function AttendanceTrendChart({ data = [], loading }) {
         <AreaChart data={formatted} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
           <defs>
             <linearGradient id="presentGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%"  stopColor="#2E7D32" stopOpacity={0.2} />
-              <stop offset="95%" stopColor="#2E7D32" stopOpacity={0} />
+              <stop offset="5%"  stopColor="#000000" stopOpacity={0.2} />
+              <stop offset="95%" stopColor="#000000" stopOpacity={0} />
             </linearGradient>
             <linearGradient id="absentGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%"  stopColor="#E53935" stopOpacity={0.15} />
-              <stop offset="95%" stopColor="#E53935" stopOpacity={0} />
+              <stop offset="5%"  stopColor="#71717a" stopOpacity={0.15} />
+              <stop offset="95%" stopColor="#71717a" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -49,11 +49,11 @@ export function AttendanceTrendChart({ data = [], loading }) {
           />
           <Legend iconType="circle" iconSize={8} />
           <Area type="monotone" dataKey="present" name="Present"
-            stroke="#2E7D32" fill="url(#presentGrad)" strokeWidth={2} dot={false} />
+            stroke="#000000" fill="url(#presentGrad)" strokeWidth={2} dot={false} />
           <Area type="monotone" dataKey="absent"  name="Absent"
-            stroke="#E53935" fill="url(#absentGrad)" strokeWidth={2} dot={false} />
+            stroke="#71717a" fill="url(#absentGrad)" strokeWidth={2} dot={false} />
           <Area type="monotone" dataKey="on_leave" name="On Leave"
-            stroke="#1976D2" fill="none" strokeWidth={1.5} strokeDasharray="4 2" dot={false} />
+            stroke="#3f3f46" fill="none" strokeWidth={1.5} strokeDasharray="4 2" dot={false} />
         </AreaChart>
       </ResponsiveContainer>
     </div>
@@ -85,8 +85,8 @@ export function DepartmentChart({ data = [], loading }) {
             contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
           />
           <Legend iconType="circle" iconSize={8} />
-          <Bar dataKey="Present" fill="#2E7D32" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="Absent"  fill="#E53935" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Present" fill="#000000" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Absent"  fill="#71717a" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

@@ -182,9 +182,9 @@ export default function FaceScanner({ onSuccess, onCancel }) {
 
   // ── Render ───────────────────────────────────────────────────
   return (
-    <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-sm w-full mx-auto">
+    <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-sm w-full mx-auto border border-zinc-200">
       <div className="text-center mb-4">
-        <Camera className="w-8 h-8 text-brand-primary mx-auto mb-2" />
+        <Camera className="w-8 h-8 text-black mx-auto mb-2" />
         <h2 className="font-bold text-gray-800 text-lg">Face Recognition</h2>
         <p className="text-sm text-gray-500">{message}</p>
       </div>
@@ -193,7 +193,7 @@ export default function FaceScanner({ onSuccess, onCancel }) {
       {status === STATUS.INIT && (
         <div className="w-full bg-gray-100 rounded-full h-2 mb-4">
           <div
-            className="bg-brand-primary h-2 rounded-full transition-all duration-500"
+            className="bg-black h-2 rounded-full transition-all duration-500"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -225,9 +225,9 @@ export default function FaceScanner({ onSuccess, onCancel }) {
 
         {/* Success overlay */}
         {status === STATUS.SUCCESS && (
-          <div className="absolute inset-0 flex items-center justify-center bg-green-900/60">
+          <div className="absolute inset-0 flex items-center justify-center bg-black/80">
             <div className="text-center text-white">
-              <CheckCircle className="w-16 h-16 mx-auto mb-2 text-green-300" />
+              <CheckCircle className="w-16 h-16 mx-auto mb-2 text-white" />
               <p className="font-bold text-lg">{result?.employee_name}</p>
               <p className="text-sm opacity-80">Attendance recorded ✓</p>
             </div>
@@ -237,7 +237,7 @@ export default function FaceScanner({ onSuccess, onCancel }) {
         {/* Face frame guide */}
         {(status === STATUS.READY || status === STATUS.SCANNING) && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-48 h-56 border-4 border-brand-secondary rounded-full opacity-60" />
+            <div className="w-48 h-56 border-4 border-white rounded-full opacity-60" />
           </div>
         )}
       </div>
@@ -246,7 +246,7 @@ export default function FaceScanner({ onSuccess, onCancel }) {
       {status === STATUS.READY && (
         <div className="flex items-center gap-2 text-xs text-gray-500 mb-4">
           <div className="flex-1 bg-gray-100 rounded-full h-1.5">
-            <div className="bg-brand-secondary h-1.5 rounded-full w-0 transition-all" />
+            <div className="bg-black h-1.5 rounded-full w-0 transition-all" />
           </div>
           <span>Confidence threshold: {(CONFIDENCE * 100).toFixed(0)}%</span>
         </div>

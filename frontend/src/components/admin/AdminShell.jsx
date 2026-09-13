@@ -77,13 +77,13 @@ export default function AdminShell({ children }) {
                 className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium
                   transition-all group ${
                   active
-                    ? 'bg-brand-light text-brand-primary'
-                    : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'
+                    ? 'bg-black text-white font-semibold shadow-sm'
+                    : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'
                 }`}
               >
-                <Icon className={`w-4.5 h-4.5 flex-shrink-0 ${active ? 'text-brand-primary' : ''}`} />
+                <Icon className={`w-4.5 h-4.5 flex-shrink-0 ${active ? 'text-white' : ''}`} />
                 {item.label}
-                {active && <ChevronRight className="w-3.5 h-3.5 ml-auto text-brand-primary" />}
+                {active && <ChevronRight className="w-3.5 h-3.5 ml-auto text-white" />}
               </Link>
             );
           })}
@@ -93,8 +93,7 @@ export default function AdminShell({ children }) {
         <div className="px-4 py-4 border-t border-gray-100">
           {admin && (
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-9 h-9 rounded-full gradient-brand flex items-center justify-center
-                              text-white font-bold text-sm flex-shrink-0">
+              <div className="w-9 h-9 rounded-full bg-black flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                 {admin.name?.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">

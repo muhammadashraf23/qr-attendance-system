@@ -13,6 +13,14 @@ module.exports = {
           light:     '#EEF2FF', // Indigo-50
           dark:      '#0F172A', // Slate-900
           surface:   '#1E293B', // Slate-800
+          primary:   '#000000',
+          primaryHover: '#18181b',
+          secondary: '#27272a',
+          emerald:   '#10B981',
+          accent:    '#000000',
+          light:     '#f4f4f5',
+          dark:      '#000000',
+          surface:   '#ffffff',
         },
       },
       fontFamily: {

@@ -116,20 +116,16 @@ export default function UnifiedRegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between relative overflow-hidden font-sans">
-      {/* Background Ambient Glows */}
-      <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-indigo-600/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="min-h-screen bg-white text-zinc-900 flex flex-col justify-between relative overflow-hidden font-sans">
       {/* Header */}
-      <header className="w-full border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-xl sticky top-0 z-50 px-6 py-4">
+      <header className="w-full border-b border-zinc-200 bg-white/80 backdrop-blur-xl sticky top-0 z-50 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Logo size={42} showText={true} />
           <div className="flex items-center gap-4">
-            <a href="/attend" className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition">
+            <a href="/attend" className="text-xs font-bold text-zinc-800 hover:text-black transition">
               Kiosk Attendance →
             </a>
-            <a href="/login" className="text-xs font-semibold text-slate-400 hover:text-indigo-400 transition">
+            <a href="/login" className="text-xs font-bold text-zinc-600 hover:text-black transition">
               Login
             </a>
           </div>
@@ -139,34 +135,34 @@ export default function UnifiedRegisterPage() {
       {/* Main Container */}
       <main className="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex items-center justify-center relative z-10">
         {success ? (
-          <div className="w-full max-w-md bg-slate-900/90 border border-slate-800 backdrop-blur-2xl rounded-3xl p-8 text-center animate-fade-in shadow-2xl">
-            <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto mb-4">
+          <div className="w-full max-w-md bg-white border border-zinc-200 rounded-3xl p-8 text-center animate-fade-in shadow-xl">
+            <div className="w-16 h-16 rounded-full bg-black text-white flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="w-8 h-8" />
             </div>
-            <h2 className="text-2xl font-extrabold text-white">Registration Complete!</h2>
-            <p className="text-sm text-slate-400 mt-2">
-              Your account has been provisioned under role <span className="text-indigo-400 font-bold uppercase">{role}</span>.
+            <h2 className="text-2xl font-extrabold text-zinc-900">Registration Complete!</h2>
+            <p className="text-sm text-zinc-500 mt-2">
+              Your account has been provisioned under role <span className="text-black font-bold uppercase">{role}</span>.
             </p>
 
             <div className="space-y-3 mt-6">
               {role === 'teacher' ? (
                 <button
                   onClick={() => router.push('/teacher/lecture-qr')}
-                  className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition shadow-lg shadow-indigo-600/30"
+                  className="w-full py-3.5 bg-black hover:bg-zinc-800 text-white font-bold rounded-xl transition shadow-sm"
                 >
                   Generate Subject Lecture QR Code →
                 </button>
               ) : role === 'student' ? (
                 <button
                   onClick={() => router.push('/attend')}
-                  className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition shadow-lg shadow-indigo-600/30"
+                  className="w-full py-3.5 bg-black hover:bg-zinc-800 text-white font-bold rounded-xl transition shadow-sm"
                 >
                   Go to Classroom Kiosk →
                 </button>
               ) : (
                 <button
                   onClick={() => router.push('/login')}
-                  className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition shadow-lg shadow-indigo-600/30"
+                  className="w-full py-3.5 bg-black hover:bg-zinc-800 text-white font-bold rounded-xl transition shadow-sm"
                 >
                   Go to Admin Portal Login →
                 </button>
@@ -174,26 +170,26 @@ export default function UnifiedRegisterPage() {
             </div>
           </div>
         ) : (
-          <div className="w-full bg-slate-900/90 border border-slate-800 backdrop-blur-2xl rounded-3xl p-6 sm:p-8 shadow-2xl">
+          <div className="w-full bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 shadow-xl">
             
             <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-3">
-                <GraduationCap className="w-4 h-4" /> Attendzo Academic Onboarding
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-100 border border-zinc-300 text-zinc-900 text-xs font-semibold mb-3">
+                <GraduationCap className="w-4 h-4 text-black" /> Account Registration
               </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
-                Unified Academic Registration Portal
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900">
+                Registration Portal
               </h1>
-              <p className="text-slate-400 text-xs sm:text-sm mt-1 max-w-md mx-auto">
-                Select your academic role to register your workspace or user profile.
+              <p className="text-zinc-500 text-xs sm:text-sm mt-1 max-w-md mx-auto">
+                Select your role below to create your account.
               </p>
             </div>
 
             {/* Role Selection Tabs */}
-            <div className="grid grid-cols-3 gap-3 mb-8 p-1.5 bg-slate-950/80 border border-slate-800 rounded-2xl">
+            <div className="grid grid-cols-3 gap-3 mb-8 p-1.5 bg-zinc-100 border border-zinc-200 rounded-2xl">
               {[
-                { id: 'student', title: 'Student', icon: UserCheck, color: 'text-cyan-400' },
-                { id: 'teacher', title: 'Teacher / Faculty', icon: BookOpen, color: 'text-emerald-400' },
-                { id: 'institution', title: 'Institution Dean', icon: Building, color: 'text-indigo-400' },
+                { id: 'student', title: 'Student', icon: UserCheck, color: 'text-black' },
+                { id: 'teacher', title: 'Teacher / Faculty', icon: BookOpen, color: 'text-black' },
+                { id: 'institution', title: 'Institution Dean', icon: Building, color: 'text-black' },
               ].map(item => {
                 const Icon = item.icon;
                 const active = role === item.id;
@@ -204,11 +200,11 @@ export default function UnifiedRegisterPage() {
                     onClick={() => setRole(item.id)}
                     className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-extrabold transition-all ${
                       active
-                        ? 'bg-slate-800 text-white shadow-md border border-slate-700'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+                        ? 'bg-black text-white shadow-sm'
+                        : 'text-zinc-600 hover:text-zinc-900'
                     }`}
                   >
-                    <Icon className={`w-4 h-4 ${item.color}`} />
+                    <Icon className={`w-4 h-4 ${active ? 'text-white' : item.color}`} />
                     <span className="hidden sm:inline">{item.title}</span>
                   </button>
                 );
@@ -220,13 +216,13 @@ export default function UnifiedRegisterPage() {
               {/* STUDENT FORM */}
               {role === 'student' && (
                 <div className="space-y-4 animate-fade-in">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-900 flex items-center gap-2">
                     <UserCheck className="w-4 h-4" /> Student Profile & Registration
                   </h3>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Roll Number / Student ID</label>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Roll Number / Student ID</label>
                       <input
                         required
                         type="text"
@@ -238,7 +234,7 @@ export default function UnifiedRegisterPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Full Student Name</label>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Full Student Name</label>
                       <input
                         required
                         type="text"
@@ -250,7 +246,7 @@ export default function UnifiedRegisterPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Department / Branch</label>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Department / Branch</label>
                       <select
                         className="input"
                         value={formData.department}
@@ -265,7 +261,7 @@ export default function UnifiedRegisterPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Year / Semester</label>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Year / Semester</label>
                       <input
                         type="text"
                         className="input"
@@ -281,13 +277,13 @@ export default function UnifiedRegisterPage() {
               {/* TEACHER FORM */}
               {role === 'teacher' && (
                 <div className="space-y-4 animate-fade-in">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-900 flex items-center gap-2">
                     <BookOpen className="w-4 h-4" /> Faculty / Teacher Account Setup
                   </h3>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Teacher / Faculty ID</label>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Teacher / Faculty ID</label>
                       <input
                         required
                         type="text"
@@ -299,7 +295,7 @@ export default function UnifiedRegisterPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Full Teacher Name</label>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Full Teacher Name</label>
                       <input
                         required
                         type="text"
@@ -311,7 +307,7 @@ export default function UnifiedRegisterPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Work Email</label>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Work Email</label>
                       <input
                         required
                         type="email"
@@ -323,7 +319,7 @@ export default function UnifiedRegisterPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Assigned Subjects / Courses</label>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Assigned Subjects / Courses</label>
                       <input
                         type="text"
                         className="input"
@@ -339,13 +335,13 @@ export default function UnifiedRegisterPage() {
               {/* INSTITUTION FORM */}
               {role === 'institution' && (
                 <div className="space-y-4 animate-fade-in">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-2">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-900 flex items-center gap-2">
                     <Building className="w-4 h-4" /> Institution Profile & Campus GPS Setup
                   </h3>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Institution Name</label>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Institution Name</label>
                       <input
                         required
                         type="text"
@@ -357,7 +353,7 @@ export default function UnifiedRegisterPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Dean / Admin Email</label>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Dean / Admin Email</label>
                       <input
                         required
                         type="email"
@@ -369,7 +365,7 @@ export default function UnifiedRegisterPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Admin Password</label>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Admin Password</label>
                       <input
                         required
                         type="password"
@@ -381,7 +377,7 @@ export default function UnifiedRegisterPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Geofence Radius (Meters)</label>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Geofence Radius (Meters)</label>
                       <input
                         type="number"
                         className="input"
@@ -397,7 +393,7 @@ export default function UnifiedRegisterPage() {
                       type="button"
                       onClick={detectGPS}
                       disabled={fetchingGps}
-                      className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 bg-cyan-500/10 px-3.5 py-2 rounded-xl border border-cyan-500/20 transition flex items-center gap-2"
+                      className="text-xs font-bold text-zinc-900 bg-zinc-100 hover:bg-zinc-200 px-3.5 py-2 rounded-xl border border-zinc-300 transition flex items-center gap-2"
                     >
                       <MapPin className="w-4 h-4" />
                       <span>{fetchingGps ? 'Detecting GPS...' : '📍 Auto-Detect Campus GPS Coordinates'}</span>
@@ -409,13 +405,13 @@ export default function UnifiedRegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-extrabold text-base rounded-2xl transition-all shadow-xl shadow-indigo-600/30 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-4 bg-black hover:bg-zinc-800 text-white font-extrabold text-base rounded-2xl transition-all shadow-md active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
-                    <span>Complete {role.toUpperCase()} Registration</span>
+                    <span>Register Account</span>
                     <ArrowRight className="w-5 h-5" />
                   </>
                 )}
@@ -426,10 +422,9 @@ export default function UnifiedRegisterPage() {
         )}
       </main>
 
-      <footer className="w-full border-t border-slate-800/80 bg-slate-900/60 backdrop-blur-xl px-6 py-4 text-xs text-slate-400 text-center">
-        © 2026 Attendzo — Unified Academic Role Registration Portal.
+      <footer className="w-full border-t border-zinc-200 bg-white px-6 py-4 text-xs text-zinc-500 text-center">
+        © 2026 Attendzo — Attendance System.
       </footer>
     </div>
   );
 }
-

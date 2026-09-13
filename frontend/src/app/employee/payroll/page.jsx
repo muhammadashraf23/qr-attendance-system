@@ -35,7 +35,7 @@ export default function EmployeePayrollPage() {
   return (
     <div className="min-h-screen bg-gray-50 max-w-lg mx-auto pb-20">
       {/* Header */}
-      <div className="gradient-brand px-5 pt-12 pb-8 text-white">
+      <div className="bg-black px-5 pt-12 pb-8 text-white">
         <Link href="/employee" className="inline-flex items-center gap-1.5 text-sm opacity-80 hover:opacity-100 mb-4">
           <ArrowLeft className="w-4 h-4" /> Back
         </Link>
@@ -89,14 +89,15 @@ export default function EmployeePayrollPage() {
             {/* Net salary hero */}
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 text-center">
               <p className="text-sm text-gray-400 font-medium">{monthName} {year} Net Salary</p>
-              <p className="text-5xl font-extrabold text-brand-primary mt-2 flex items-center justify-center gap-1">
-                <IndianRupee className="w-9 h-9" />
+              <p className="text-5xl font-extrabold text-black mt-2 flex items-center justify-center gap-1">
+                <IndianRupee className="w-9 h-9 text-black" />
                 {parseFloat(data.net_salary).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
               </p>
-              <div className={`inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full text-xs font-semibold
-                ${data.status === 'paid' ? 'bg-green-100 text-green-700' :
-                  data.status === 'finalized' ? 'bg-blue-100 text-blue-700' :
-                  'bg-yellow-100 text-yellow-700'}`}>
+              <div className={`inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full text-xs font-semibold ${
+                data.status === 'paid' ? 'bg-black text-white border border-black' :
+                data.status === 'finalized' ? 'bg-zinc-200 text-zinc-900 border border-zinc-300' :
+                'bg-zinc-100 text-zinc-800 border border-zinc-300'
+              }`}>
                 {data.status === 'paid' ? '✅ Paid' :
                  data.status === 'finalized' ? '🔒 Finalized' : '📋 Draft'}
               </div>
@@ -108,9 +109,9 @@ export default function EmployeePayrollPage() {
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { label: 'Working Days', val: data.working_days,  color: 'text-gray-700' },
-                  { label: 'Present',      val: data.present_days,  color: 'text-green-700' },
-                  { label: 'Absent',       val: data.absent_days,   color: 'text-red-600' },
-                  { label: 'Leave Days',   val: data.leave_days,    color: 'text-blue-700' },
+                  { label: 'Present',      val: data.present_days,  color: 'text-zinc-900' },
+                  { label: 'Absent',       val: data.absent_days,   color: 'text-zinc-900 font-bold' },
+                  { label: 'Leave Days',   val: data.leave_days,    color: 'text-zinc-800' },
                 ].map(s => (
                   <div key={s.label} className="bg-gray-50 rounded-xl p-3 text-center">
                     <p className={`text-2xl font-extrabold ${s.color}`}>{s.val}</p>
@@ -139,12 +140,12 @@ export default function EmployeePayrollPage() {
                   <div key={row.label} className="px-5 py-3 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {row.type === 'credit'
-                        ? <TrendingUp className="w-4 h-4 text-green-500" />
-                        : <TrendingDown className="w-4 h-4 text-red-400" />}
+                        ? <TrendingUp className="w-4 h-4 text-black" />
+                        : <TrendingDown className="w-4 h-4 text-zinc-500" />}
                       <span className="text-sm text-gray-700">{row.label}</span>
                     </div>
                     <span className={`text-sm font-semibold ${
-                      row.type === 'credit' ? 'text-green-700' : 'text-red-600'
+                      row.type === 'credit' ? 'text-black font-bold' : 'text-zinc-600'
                     }`}>
                       {row.type === 'debit' ? '- ' : '+ '}
                       ₹{parseFloat(row.val).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
@@ -153,9 +154,9 @@ export default function EmployeePayrollPage() {
                 ))}
 
                 {/* Net total */}
-                <div className="px-5 py-4 bg-brand-light flex items-center justify-between">
-                  <span className="font-bold text-brand-primary">Net Salary</span>
-                  <span className="text-lg font-extrabold text-brand-primary">
+                <div className="px-5 py-4 bg-zinc-100 border-t border-zinc-200 flex items-center justify-between">
+                  <span className="font-bold text-black">Net Salary</span>
+                  <span className="text-lg font-extrabold text-black">
                     ₹{parseFloat(data.net_salary).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                   </span>
                 </div>

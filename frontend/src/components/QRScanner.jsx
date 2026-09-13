@@ -128,14 +128,10 @@ export default function QRAttendance() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between relative overflow-hidden font-sans">
-      {/* Background ambient lighting */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-indigo-600/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 right-10 w-[300px] h-[300px] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-white text-zinc-900 flex flex-col justify-between relative overflow-hidden font-sans">
 
       {/* Top Header Nav */}
-      <header className="w-full border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-xl sticky top-0 z-50 px-6 py-4">
+      <header className="w-full border-b border-zinc-200 bg-white/80 backdrop-blur-xl sticky top-0 z-50 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Logo size={42} showText={true} />
 
@@ -143,8 +139,8 @@ export default function QRAttendance() {
             {/* Online/Offline indicator */}
             <span className={`flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full border transition-all ${
               online
-                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                : 'bg-rose-500/10 text-rose-400 border-rose-500/30 animate-pulse'
+                ? 'bg-zinc-100 text-zinc-900 border-zinc-300'
+                : 'bg-zinc-900 text-white border-zinc-700 animate-pulse'
             }`}>
               {online ? <Wifi className="w-3.5 h-3.5" /> : <WifiOff className="w-3.5 h-3.5" />}
               {online ? 'System Online' : 'Offline Mode Buffer'}
@@ -152,7 +148,7 @@ export default function QRAttendance() {
 
             <a
               href="/admin"
-              className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-indigo-400 transition"
+              className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-zinc-600 hover:text-black transition"
             >
               <ShieldCheck className="w-4 h-4" /> Admin Portal
             </a>
@@ -165,23 +161,23 @@ export default function QRAttendance() {
         
         {/* Render Done Confirmation Screen */}
         {pageState === STATES.DONE && result ? (
-          <div className="w-full max-w-md bg-slate-900/90 border border-slate-800 backdrop-blur-2xl rounded-3xl p-8 shadow-2xl animate-fade-in text-center">
-            <div className={`w-20 h-20 mx-auto mb-5 rounded-2xl flex items-center justify-center shadow-lg ${
-              result.type === 'checkin' ? 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-400' : 'bg-amber-500/20 border border-amber-500/40 text-amber-400'
+          <div className="w-full max-w-md bg-white border border-zinc-200 rounded-3xl p-8 shadow-xl animate-fade-in text-center">
+            <div className={`w-20 h-20 mx-auto mb-5 rounded-2xl flex items-center justify-center shadow-sm ${
+              result.type === 'checkin' ? 'bg-black text-white border border-black' : 'bg-zinc-800 text-white border border-zinc-700'
             }`}>
               {result.type === 'checkin' ? <CheckCircle className="w-10 h-10" /> : <LogOut className="w-10 h-10" />}
             </div>
 
-            <h2 className="text-2xl font-extrabold text-white mb-1">
+            <h2 className="text-2xl font-extrabold text-zinc-900 mb-1">
               {result.type === 'checkin' ? 'Check-In Recorded!' : 'Check-Out Recorded!'}
             </h2>
-            <p className="text-sm text-slate-400 mb-6">
+            <p className="text-sm text-zinc-500 mb-6">
               {result.offline
                 ? '⚡ Saved offline — will automatically sync to database'
                 : result.type === 'checkin' ? 'Welcome! Have a productive workday.' : 'Check-out registered. See you tomorrow!'}
             </p>
 
-            <div className="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5 text-left space-y-3 text-sm mb-6">
+            <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-5 text-left space-y-3 text-sm mb-6">
               {[
                 ['Employee', result.employee_name || result.employee_id],
                 ['Date', format(new Date(), 'dd MMMM yyyy')],
@@ -190,16 +186,16 @@ export default function QRAttendance() {
                 ...(result.working_hours ? [['Working Hours', result.working_hours]] : []),
                 ['Verification', result.offline ? 'Offline Buffer' : 'QR Verification + GPS'],
               ].map(([key, val]) => (
-                <div key={key} className="flex justify-between items-center py-1 border-b border-slate-700/40 last:border-0">
-                  <span className="text-slate-400 font-medium">{key}</span>
-                  <span className="font-semibold text-slate-100">{val}</span>
+                <div key={key} className="flex justify-between items-center py-1 border-b border-zinc-200 last:border-0">
+                  <span className="text-zinc-500 font-medium">{key}</span>
+                  <span className="font-semibold text-zinc-900">{val}</span>
                 </div>
               ))}
             </div>
 
             <button
               onClick={reset}
-              className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition shadow-lg shadow-indigo-600/30"
+              className="w-full py-3.5 bg-black hover:bg-zinc-800 text-white font-bold rounded-xl transition shadow-sm"
             >
               Done & Return to Kiosk
             </button>
@@ -211,32 +207,32 @@ export default function QRAttendance() {
             {/* Left Column: SaaS Branding & Live Digital Kiosk Clock */}
             <div className="lg:col-span-5 space-y-6 text-center lg:text-left">
               <div>
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-4">
-                  <Sparkles className="w-3.5 h-3.5" /> Academic Attendance SaaS
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-100 border border-zinc-300 text-zinc-900 text-xs font-semibold mb-4">
+                  <Sparkles className="w-3.5 h-3.5 text-zinc-900" /> Academic Attendance SaaS
                 </div>
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 tracking-tight leading-tight">
                   University & College <br />
-                  <span className="bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+                  <span className="text-black">
                     Attendance Kiosk
                   </span>
                 </h1>
-                <p className="text-slate-400 text-sm sm:text-base mt-3 max-w-md mx-auto lg:mx-0">
+                <p className="text-zinc-600 text-sm sm:text-base mt-3 max-w-md mx-auto lg:mx-0">
                   Touchless student verification with campus GPS geofencing & face recognition scanner.
                 </p>
               </div>
 
               {/* Live Digital Clock Card */}
-              <div className="bg-slate-900/80 border border-slate-800 backdrop-blur-xl rounded-3xl p-6 shadow-xl relative overflow-hidden">
-                <div className="flex items-center justify-between text-xs text-slate-400 mb-2 font-medium">
-                  <span className="flex items-center gap-1.5 text-indigo-400 font-semibold">
-                    <Clock className="w-4 h-4" /> Kiosk Clock Engine
+              <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm relative overflow-hidden">
+                <div className="flex items-center justify-between text-xs text-zinc-500 mb-2 font-medium">
+                  <span className="flex items-center gap-1.5 text-zinc-900 font-semibold">
+                    <Clock className="w-4 h-4 text-black" /> Kiosk Clock Engine
                   </span>
-                  <span className="bg-slate-800 px-2.5 py-0.5 rounded-full text-slate-300">Campus Live Sync</span>
+                  <span className="bg-zinc-100 px-2.5 py-0.5 rounded-full text-zinc-800 border border-zinc-200">Campus Live Sync</span>
                 </div>
-                <div className="font-mono text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight text-gradient">
+                <div className="font-mono text-3xl sm:text-4xl lg:text-5xl font-black text-black tracking-tight">
                   {mounted && now ? format(now, 'hh:mm:ss a') : '--:--:-- --'}
                 </div>
-                <p className="text-sm font-semibold text-slate-400 mt-2">
+                <p className="text-sm font-semibold text-zinc-600 mt-2">
                   {mounted && now ? format(now, 'EEEE, dd MMMM yyyy') : '...'}
                 </p>
               </div>
@@ -245,16 +241,16 @@ export default function QRAttendance() {
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <a
                   href="/activate-face"
-                  className="flex items-center justify-center gap-2 rounded-2xl p-3.5 bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white transition text-xs font-bold group"
+                  className="flex items-center justify-center gap-2 rounded-2xl p-3.5 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-800 hover:text-black transition text-xs font-bold group"
                 >
-                  <Scan className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition" />
+                  <Scan className="w-4 h-4 text-black group-hover:scale-110 transition" />
                   <span>1-Click Face Activation</span>
                 </a>
                 <a
                   href="/admin/roster-import"
-                  className="flex items-center justify-center gap-2 rounded-2xl p-3.5 bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white transition text-xs font-bold group"
+                  className="flex items-center justify-center gap-2 rounded-2xl p-3.5 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-800 hover:text-black transition text-xs font-bold group"
                 >
-                  <UserCheck className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition" />
+                  <UserCheck className="w-4 h-4 text-black group-hover:scale-110 transition" />
                   <span>CSV Roster Import</span>
                 </a>
               </div>
@@ -262,16 +258,16 @@ export default function QRAttendance() {
 
             {/* Right Column: Attendance Verification Card */}
             <div className="lg:col-span-7">
-              <div className="bg-slate-900/90 border border-slate-800 backdrop-blur-2xl rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+              <div className="bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 shadow-lg relative">
                 
-                <div className="flex items-center justify-between pb-6 border-b border-slate-800 mb-6">
+                <div className="flex items-center justify-between pb-6 border-b border-zinc-200 mb-6">
                   <div>
-                    <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <h2 className="text-xl font-bold text-zinc-900 flex items-center gap-2">
                       <span>Student Verification</span>
                     </h2>
-                    <p className="text-xs text-slate-400 mt-0.5">Enter Student Roll Number or ID to mark attendance</p>
+                    <p className="text-xs text-zinc-500 mt-0.5">Enter Student Roll Number or ID to mark attendance</p>
                   </div>
-                  <div className="p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+                  <div className="p-2 rounded-xl bg-zinc-100 border border-zinc-300 text-zinc-900">
                     <Scan className="w-5 h-5" />
                   </div>
                 </div>
@@ -279,12 +275,12 @@ export default function QRAttendance() {
                 {/* ID Input Form */}
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-700 mb-2">
                       Student Roll Number / ID
                     </label>
                     <div className="flex gap-3">
                       <input
-                        className="flex-1 bg-slate-950/80 border border-slate-700/80 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 rounded-2xl px-4 py-3.5 text-base text-white placeholder:text-slate-500 focus:outline-none transition"
+                        className="flex-1 bg-white border border-zinc-300 focus:border-black focus:ring-2 focus:ring-black/20 rounded-2xl px-4 py-3.5 text-base text-zinc-900 placeholder:text-zinc-400 focus:outline-none transition"
                         placeholder="e.g. CS-2026-042 or ATZ-001..."
                         value={employeeId}
                         onChange={e => { setEmployeeId(e.target.value); setEmpInfo(null); }}
@@ -294,7 +290,7 @@ export default function QRAttendance() {
                       <button
                         onClick={lookupEmployee}
                         disabled={pageState === STATES.LOADING}
-                        className="px-6 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl text-sm transition shadow-lg shadow-indigo-600/30 disabled:opacity-50 flex items-center gap-2"
+                        className="px-6 py-3.5 bg-black hover:bg-zinc-800 text-white font-bold rounded-2xl text-sm transition shadow-sm disabled:opacity-50 flex items-center gap-2"
                       >
                         {pageState === STATES.LOADING ? (
                           <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -311,9 +307,9 @@ export default function QRAttendance() {
                   {/* GPS Status Indicator */}
                   {gpsStatus !== 'idle' && (
                     <div className={`flex items-center gap-2 text-xs px-4 py-2.5 rounded-xl border font-medium ${
-                      gpsStatus === 'ok' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' :
-                      gpsStatus === 'denied' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' :
-                      'bg-indigo-500/10 text-indigo-400 border-indigo-500/30 animate-pulse'
+                      gpsStatus === 'ok' ? 'bg-zinc-100 text-zinc-900 border-zinc-300' :
+                      gpsStatus === 'denied' ? 'bg-zinc-200 text-zinc-800 border-zinc-400' :
+                      'bg-zinc-100 text-zinc-900 border-zinc-300 animate-pulse'
                     }`}>
                       <MapPin className="w-4 h-4 flex-shrink-0" />
                       <span>
@@ -326,17 +322,17 @@ export default function QRAttendance() {
 
                   {/* Employee Lookup Result & Action Buttons */}
                   {empInfo && (
-                    <div className="animate-fade-in pt-4 border-t border-slate-800/80 space-y-4">
-                      <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 flex items-center justify-between">
+                    <div className="animate-fade-in pt-4 border-t border-zinc-200 space-y-4">
+                      <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-4 flex items-center justify-between">
                         <div>
-                          <p className="text-xs text-slate-400 font-medium">Employee Name</p>
-                          <p className="text-lg font-bold text-white">{empInfo.employee_name}</p>
-                          <p className="text-xs text-indigo-400 font-mono mt-0.5">{empInfo.employee_id}</p>
+                          <p className="text-xs text-zinc-500 font-medium">Employee Name</p>
+                          <p className="text-lg font-bold text-zinc-900">{empInfo.employee_name}</p>
+                          <p className="text-xs text-zinc-700 font-mono mt-0.5">{empInfo.employee_id}</p>
                         </div>
                         <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                          empInfo.status === 'checked_in' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' :
-                          empInfo.status === 'checked_out' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30' :
-                          'bg-amber-500/10 text-amber-400 border border-amber-500/30'
+                          empInfo.status === 'checked_in' ? 'bg-black text-white border border-black' :
+                          empInfo.status === 'checked_out' ? 'bg-zinc-200 text-zinc-800 border border-zinc-400' :
+                          'bg-zinc-100 text-zinc-700 border border-zinc-300'
                         }`}>
                           {empInfo.status === 'checked_in' ? 'Checked In' : empInfo.status === 'checked_out' ? 'Completed Today' : 'Not Checked In'}
                         </span>
@@ -346,7 +342,7 @@ export default function QRAttendance() {
                         <button
                           onClick={() => handleAction('checkin')}
                           disabled={pageState === STATES.LOADING}
-                          className="w-full py-4 bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-extrabold text-lg rounded-2xl transition-all shadow-xl shadow-indigo-600/30 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3"
+                          className="w-full py-4 bg-black hover:bg-zinc-800 text-white font-extrabold text-lg rounded-2xl transition-all shadow-md active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3"
                         >
                           <CheckCircle className="w-6 h-6" />
                           <span>{pageState === STATES.LOADING ? 'Recording Check-In...' : 'CHECK IN NOW'}</span>
@@ -355,13 +351,13 @@ export default function QRAttendance() {
 
                       {empInfo.status === 'checked_in' && (
                         <div className="space-y-3">
-                          <p className="text-center text-xs text-slate-400 bg-slate-800/40 py-2 rounded-xl border border-slate-800">
-                            ⏱ Checked in at <span className="text-emerald-400 font-bold">{format(new Date(empInfo.check_in_time), 'hh:mm a')}</span>
+                          <p className="text-center text-xs text-zinc-600 bg-zinc-100 py-2 rounded-xl border border-zinc-200">
+                            ⏱ Checked in at <span className="text-zinc-900 font-bold">{format(new Date(empInfo.check_in_time), 'hh:mm a')}</span>
                           </p>
                           <button
                             onClick={() => handleAction('checkout')}
                             disabled={pageState === STATES.LOADING}
-                            className="w-full py-4 bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-500 hover:to-rose-500 text-white font-extrabold text-lg rounded-2xl transition-all shadow-xl shadow-amber-600/30 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3"
+                            className="w-full py-4 bg-zinc-900 hover:bg-black text-white font-extrabold text-lg rounded-2xl transition-all shadow-md active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3"
                           >
                             <LogOut className="w-6 h-6" />
                             <span>{pageState === STATES.LOADING ? 'Recording Check-Out...' : 'CHECK OUT NOW'}</span>
@@ -370,12 +366,12 @@ export default function QRAttendance() {
                       )}
 
                       {empInfo.status === 'checked_out' && (
-                        <div className="text-center py-6 bg-slate-950/40 border border-slate-800/80 rounded-2xl">
-                          <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto mb-2">
+                        <div className="text-center py-6 bg-zinc-50 border border-zinc-200 rounded-2xl">
+                          <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mx-auto mb-2">
                             <CheckCircle className="w-6 h-6" />
                           </div>
-                          <p className="font-bold text-white">Attendance Completed</p>
-                          <p className="text-xs text-slate-400 mt-1">Check-in and check-out logs recorded for today.</p>
+                          <p className="font-bold text-zinc-900">Attendance Completed</p>
+                          <p className="text-xs text-zinc-500 mt-1">Check-in and check-out logs recorded for today.</p>
                         </div>
                       )}
                     </div>
@@ -391,13 +387,13 @@ export default function QRAttendance() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-slate-800/80 bg-slate-900/60 backdrop-blur-xl px-6 py-4 relative z-10 text-xs text-slate-400">
+      <footer className="w-full border-t border-zinc-200 bg-white px-6 py-4 relative z-10 text-xs text-zinc-500">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <p>© 2026 SmartAttendance Cloud (Attendzo). Enterprise SaaS Platform.</p>
-          <div className="flex items-center gap-6">
-            <a href="/attend?mode=face" className="hover:text-indigo-400 transition">👤 Face Biometrics</a>
-            <a href="/login" className="hover:text-indigo-400 transition">🔑 Portal Login</a>
-            <a href="/admin" className="hover:text-indigo-400 transition">🛡️ HR Admin</a>
+          <div className="flex items-center gap-6 font-medium">
+            <a href="/attend?mode=face" className="hover:text-black transition">👤 Face Biometrics</a>
+            <a href="/login" className="hover:text-black transition">🔑 Portal Login</a>
+            <a href="/admin" className="hover:text-black transition">🛡️ HR Admin</a>
           </div>
         </div>
       </footer>

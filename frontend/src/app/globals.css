@@ -9,49 +9,49 @@
     margin: 0;
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
-    background: #0f172a;
-    color: #f8fafc;
+    background: #ffffff;
+    color: #09090b;
   }
   :root {
-    --brand-primary:   #4F46E5;
-    --brand-secondary: #06B6D4;
-    --brand-accent:    #F43F5E;
-    --brand-light:     #EEF2FF;
-    --brand-dark:      #0F172A;
+    --brand-primary:   #000000;
+    --brand-secondary: #18181b;
+    --brand-accent:    #000000;
+    --brand-light:     #f4f4f5;
+    --brand-dark:      #000000;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-indigo-600 hover:bg-indigo-700 text-white font-semibold
+    @apply bg-black hover:bg-zinc-800 text-white font-semibold
            px-5 py-2.5 rounded-xl transition-all duration-200
            disabled:opacity-50 disabled:cursor-not-allowed
-           active:scale-95 shadow-md shadow-indigo-500/20;
+           active:scale-95 shadow-sm;
   }
   .btn-secondary {
-    @apply bg-slate-800 hover:bg-slate-700 text-indigo-300
-           font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 border border-slate-700;
+    @apply bg-white hover:bg-zinc-100 text-zinc-900
+           font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 border border-zinc-300;
   }
   .btn-danger {
-    @apply bg-rose-600 hover:bg-rose-700 text-white
-           font-semibold px-5 py-2.5 rounded-xl transition-all duration-200;
+    @apply bg-zinc-900 hover:bg-zinc-800 text-white
+           font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 border border-zinc-700;
   }
   .card {
-    @apply bg-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-800 p-6 shadow-xl;
+    @apply bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm text-zinc-900;
   }
   .input {
-    @apply w-full bg-slate-800/80 border border-slate-700/80 rounded-xl px-4 py-3 text-sm text-slate-100
-           focus:outline-none focus:ring-2 focus:ring-indigo-500/50
-           focus:border-indigo-500 transition-all duration-200
-           placeholder:text-slate-500;
+    @apply w-full bg-white border border-zinc-300 rounded-xl px-4 py-3 text-sm text-zinc-900
+           focus:outline-none focus:ring-2 focus:ring-black
+           focus:border-black transition-all duration-200
+           placeholder:text-zinc-400;
   }
-  .badge-present  { @apply bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold px-2.5 py-0.5 rounded-full; }
-  .badge-absent   { @apply bg-rose-500/10    text-rose-400    border border-rose-500/20    text-xs font-semibold px-2.5 py-0.5 rounded-full; }
-  .badge-late     { @apply bg-amber-500/10   text-amber-400   border border-amber-500/20   text-xs font-semibold px-2.5 py-0.5 rounded-full; }
-  .badge-leave    { @apply bg-cyan-500/10    text-cyan-400    border border-cyan-500/20    text-xs font-semibold px-2.5 py-0.5 rounded-full; }
-  .badge-pending  { @apply bg-yellow-500/10  text-yellow-400  border border-yellow-500/20  text-xs font-semibold px-2.5 py-0.5 rounded-full; }
-  .badge-approved { @apply bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold px-2.5 py-0.5 rounded-full; }
-  .badge-rejected { @apply bg-rose-500/10    text-rose-400    border border-rose-500/20    text-xs font-semibold px-2.5 py-0.5 rounded-full; }
+  .badge-present  { @apply bg-zinc-100 text-zinc-900 border border-zinc-300 text-xs font-semibold px-2.5 py-0.5 rounded-full; }
+  .badge-absent   { @apply bg-zinc-900 text-white border border-zinc-700 text-xs font-semibold px-2.5 py-0.5 rounded-full; }
+  .badge-late     { @apply bg-zinc-200 text-zinc-800 border border-zinc-400 text-xs font-semibold px-2.5 py-0.5 rounded-full; }
+  .badge-leave    { @apply bg-zinc-100 text-zinc-700 border border-zinc-300 text-xs font-semibold px-2.5 py-0.5 rounded-full; }
+  .badge-pending  { @apply bg-zinc-100 text-zinc-800 border border-zinc-300 text-xs font-semibold px-2.5 py-0.5 rounded-full; }
+  .badge-approved { @apply bg-black text-white border border-black text-xs font-semibold px-2.5 py-0.5 rounded-full; }
+  .badge-rejected { @apply bg-zinc-800 text-zinc-100 border border-zinc-700 text-xs font-semibold px-2.5 py-0.5 rounded-full; }
 }
 
 @layer utilities {
@@ -61,15 +61,13 @@
     to   { opacity: 1; transform: translateY(0); }
   }
   .gradient-brand {
-    background: radial-gradient(circle at top left, rgba(79, 70, 229, 0.25), transparent 40%),
-                radial-gradient(circle at bottom right, rgba(6, 182, 212, 0.2), transparent 40%),
-                #0f172a;
+    background: radial-gradient(circle at top left, rgba(0, 0, 0, 0.04), transparent 50%), #ffffff;
   }
   .gradient-surface {
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+    background: #ffffff;
   }
   .text-gradient {
-    background: linear-gradient(135deg, #818cf8, #38bdf8, #34d399);
+    background: linear-gradient(135deg, #000000, #3f3f46, #71717a);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }

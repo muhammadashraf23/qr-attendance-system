@@ -3,21 +3,21 @@
 import { Users, UserCheck, UserX, Clock, TrendingUp, Calendar, AlertCircle } from 'lucide-react';
 
 const CARDS = [
-  { key: 'total',         label: 'Total Employees', icon: Users,      color: 'blue'  },
+  { key: 'total',         label: 'Total Employees', icon: Users,      color: 'zinc'  },
   { key: 'present',       label: 'Present Today',   icon: UserCheck,  color: 'green' },
   { key: 'absent',        label: 'Absent Today',    icon: UserX,      color: 'red'   },
   { key: 'late',          label: 'Late Arrivals',   icon: Clock,      color: 'amber' },
-  { key: 'on_leave',      label: 'On Leave',        icon: Calendar,   color: 'indigo'},
+  { key: 'on_leave',      label: 'On Leave',        icon: Calendar,   color: 'dark'  },
   { key: 'pending_leaves',label: 'Pending Leaves',  icon: AlertCircle,color: 'orange'},
 ];
 
 const COLOR_MAP = {
-  blue:   { bg: 'bg-blue-50',   text: 'text-blue-700',   icon: 'text-blue-500',   border: 'border-blue-100' },
-  green:  { bg: 'bg-green-50',  text: 'text-green-700',  icon: 'text-green-500',  border: 'border-green-100' },
-  red:    { bg: 'bg-red-50',    text: 'text-red-700',    icon: 'text-red-500',    border: 'border-red-100' },
-  amber:  { bg: 'bg-amber-50',  text: 'text-amber-700',  icon: 'text-amber-500',  border: 'border-amber-100' },
-  indigo: { bg: 'bg-indigo-50', text: 'text-indigo-700', icon: 'text-indigo-500', border: 'border-indigo-100' },
-  orange: { bg: 'bg-orange-50', text: 'text-orange-700', icon: 'text-orange-500', border: 'border-orange-100' },
+  zinc:   { bg: 'bg-zinc-100',   text: 'text-zinc-900',   icon: 'text-zinc-900',   border: 'border-zinc-300' },
+  green:  { bg: 'bg-green-50',  text: 'text-green-800',  icon: 'text-green-600',  border: 'border-green-200' },
+  red:    { bg: 'bg-red-50',    text: 'text-red-800',    icon: 'text-red-600',    border: 'border-red-200' },
+  amber:  { bg: 'bg-amber-50',  text: 'text-amber-800',  icon: 'text-amber-600',  border: 'border-amber-200' },
+  dark:   { bg: 'bg-zinc-900',  text: 'text-white',      icon: 'text-zinc-300',   border: 'border-zinc-800' },
+  orange: { bg: 'bg-orange-50', text: 'text-orange-800', icon: 'text-orange-600', border: 'border-orange-200' },
 };
 
 export default function DashboardStats({ summary, loading }) {

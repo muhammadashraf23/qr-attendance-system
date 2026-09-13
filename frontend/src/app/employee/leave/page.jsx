@@ -59,7 +59,7 @@ export default function LeaveApplyPage() {
   return (
     <div className="min-h-screen bg-gray-50 max-w-lg mx-auto pb-20">
       {/* Header */}
-      <div className="gradient-brand px-5 pt-12 pb-6 text-white">
+      <div className="bg-black px-5 pt-12 pb-6 text-white">
         <Link href="/employee" className="inline-flex items-center gap-1.5 text-sm opacity-80 hover:opacity-100 mb-4">
           <ArrowLeft className="w-4 h-4" /> Back
         </Link>
@@ -74,9 +74,9 @@ export default function LeaveApplyPage() {
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Available Balance</p>
             <div className="grid grid-cols-3 gap-2">
               {[
-                { label: 'Casual', bal: balance.casual_leave_balance,  color: 'bg-sky-50 text-sky-700' },
-                { label: 'Sick',   bal: balance.sick_leave_balance,    color: 'bg-rose-50 text-rose-700' },
-                { label: 'Paid',   bal: balance.paid_leave_balance,    color: 'bg-violet-50 text-violet-700' },
+                { label: 'Casual', bal: balance.casual_leave_balance,  color: 'bg-zinc-100 text-zinc-900 border border-zinc-200' },
+                { label: 'Sick',   bal: balance.sick_leave_balance,    color: 'bg-zinc-200 text-zinc-800 border border-zinc-300' },
+                { label: 'Paid',   bal: balance.paid_leave_balance,    color: 'bg-zinc-100 text-zinc-900 border border-zinc-200' },
               ].map(b => (
                 <div key={b.label} className={`${b.color} rounded-xl p-3 text-center`}>
                   <p className="text-2xl font-extrabold">{b.bal}</p>
@@ -102,7 +102,7 @@ export default function LeaveApplyPage() {
                   onClick={() => setForm(f => ({ ...f, leave_type: t.value }))}
                   className={`text-left px-3 py-2.5 rounded-xl border-2 transition-all ${
                     form.leave_type === t.value
-                      ? 'border-brand-primary bg-brand-light'
+                      ? 'border-black bg-zinc-100 text-black'
                       : 'border-gray-100 hover:border-gray-200'
                   }`}
                 >
@@ -140,7 +140,7 @@ export default function LeaveApplyPage() {
           </div>
 
           {daysDiff > 0 && (
-            <div className="bg-brand-light rounded-xl px-3 py-2 text-sm text-brand-primary font-semibold">
+            <div className="bg-zinc-100 border border-zinc-200 rounded-xl px-3 py-2 text-sm text-black font-semibold">
               📅 {daysDiff} day{daysDiff > 1 ? 's' : ''} requested
             </div>
           )}

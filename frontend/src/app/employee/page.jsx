@@ -88,7 +88,7 @@ export default function EmployeeDashboard() {
       <div className="max-w-lg mx-auto px-4 py-5 space-y-5 pb-24">
 
         {/* Welcome card */}
-        <div className="gradient-brand rounded-3xl p-5 text-white shadow-lg">
+        <div className="bg-black rounded-3xl p-5 text-white shadow-lg">
           <p className="text-sm opacity-80 font-medium">Welcome back,</p>
           <h1 className="text-2xl font-extrabold mt-0.5">{employee?.full_name}</h1>
           <p className="text-sm opacity-70 mt-0.5">{employee?.employee_id} · {employee?.designation}</p>
@@ -111,8 +111,8 @@ export default function EmployeeDashboard() {
           </div>
 
           <a href="/attend"
-             className="mt-3 w-full block text-center bg-white text-brand-primary font-bold
-                        py-3 rounded-2xl text-sm hover:bg-brand-light transition">
+             className="mt-3 w-full block text-center bg-white text-black font-bold
+                        py-3 rounded-2xl text-sm hover:bg-zinc-100 transition">
             {todayAtt?.check_in_time && !todayAtt?.check_out_time
               ? '🚪 Mark Check-Out'
               : todayAtt?.check_out_time
@@ -124,10 +124,10 @@ export default function EmployeeDashboard() {
         {/* This month stats */}
         <div className="grid grid-cols-3 gap-3">
           {[
-            { label: 'Present', value: presentDays, icon: '✅', color: 'text-green-700 bg-green-50' },
-            { label: 'Late',    value: lateDays,    icon: '⚠️', color: 'text-amber-700 bg-amber-50' },
+            { label: 'Present', value: presentDays, icon: '✅', color: 'text-zinc-900 bg-zinc-100 border border-zinc-200' },
+            { label: 'Late',    value: lateDays,    icon: '⚠️', color: 'text-zinc-800 bg-zinc-200 border border-zinc-300' },
             { label: 'Leaves',  value: leaves.filter(l => l.status === 'approved').length,
-              icon: '🏖', color: 'text-blue-700 bg-blue-50' },
+              icon: '🏖', color: 'text-zinc-900 bg-zinc-100 border border-zinc-200' },
           ].map(s => (
             <div key={s.label} className={`${s.color} rounded-2xl p-4 text-center`}>
               <p className="text-2xl mb-1">{s.icon}</p>
@@ -141,7 +141,7 @@ export default function EmployeeDashboard() {
         {balance && (
           <div className="card">
             <h2 className="font-bold text-gray-800 mb-3 flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-brand-primary" /> Leave Balance
+              <Calendar className="w-4 h-4 text-black" /> Leave Balance
             </h2>
             <div className="grid grid-cols-3 gap-3">
               {[
@@ -149,14 +149,14 @@ export default function EmployeeDashboard() {
                 { label: 'Sick',    val: balance.sick_leave_balance },
                 { label: 'Paid',    val: balance.paid_leave_balance },
               ].map(l => (
-                <div key={l.label} className="bg-brand-light rounded-xl p-3 text-center">
-                  <p className="text-2xl font-extrabold text-brand-primary">{l.val}</p>
-                  <p className="text-xs text-brand-secondary font-semibold mt-0.5">{l.label}</p>
+                <div key={l.label} className="bg-zinc-100 rounded-xl p-3 text-center border border-zinc-200">
+                  <p className="text-2xl font-extrabold text-zinc-900">{l.val}</p>
+                  <p className="text-xs text-zinc-600 font-semibold mt-0.5">{l.label}</p>
                 </div>
               ))}
             </div>
             <a href="/employee/leave"
-               className="block mt-3 text-center text-sm text-brand-primary font-semibold hover:underline">
+               className="block mt-3 text-center text-sm text-black font-semibold hover:underline">
               Apply for leave →
             </a>
           </div>
@@ -166,7 +166,7 @@ export default function EmployeeDashboard() {
         <div className="card p-0 overflow-hidden">
           <div className="px-5 py-4 border-b border-gray-50">
             <h2 className="font-bold text-gray-800 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-brand-primary" /> Recent Attendance
+              <Clock className="w-4 h-4 text-black" /> Recent Attendance
             </h2>
           </div>
           <div className="divide-y divide-gray-50">
@@ -238,7 +238,7 @@ export default function EmployeeDashboard() {
           { href: '/employee/payroll',icon:'💰', label: 'Salary'   },
         ].map(item => (
           <a key={item.href} href={item.href}
-             className="flex-1 flex flex-col items-center py-3 text-gray-400 hover:text-brand-primary transition">
+             className="flex-1 flex flex-col items-center py-3 text-gray-400 hover:text-black transition">
             <span className="text-xl">{item.icon}</span>
             <span className="text-xs mt-0.5 font-medium">{item.label}</span>
           </a>

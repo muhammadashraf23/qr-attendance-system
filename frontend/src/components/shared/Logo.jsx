@@ -16,16 +16,16 @@ export default function Logo({ size = 48, showText = true, className = '' }) {
       {showText && (
         <div className="flex flex-col leading-tight">
           <span
-            className="font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent"
+            className="font-extrabold tracking-tight text-black"
             style={{ fontSize: size * 0.45 }}
           >
             Attendzo
           </span>
           <span
-            className="font-semibold tracking-widest uppercase text-slate-400"
+            className="font-semibold tracking-widest uppercase text-zinc-500"
             style={{ fontSize: size * 0.22 }}
           >
-            Academic SaaS
+            Attendance System
           </span>
         </div>
       )}
