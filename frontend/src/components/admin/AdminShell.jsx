@@ -6,17 +6,18 @@ import Link from 'next/link';
 import {
   LayoutDashboard, Users, Calendar, FileBarChart2,
   Wallet, Settings, LogOut, Menu, X, ChevronRight,
-  Clock, Bell,
+  Clock, Bell, Upload,
 } from 'lucide-react';
 import Logo from '@/components/shared/Logo';
 
 const NAV = [
-  { href: '/admin',          icon: LayoutDashboard, label: 'Dashboard'   },
-  { href: '/admin/employees',icon: Users,           label: 'Employees'   },
-  { href: '/admin/attendance',icon: Calendar,       label: 'Attendance'  },
-  { href: '/admin/leave',    icon: Clock,           label: 'Leave'       },
-  { href: '/admin/payroll',  icon: Wallet,          label: 'Payroll'     },
-  { href: '/admin/reports',  icon: FileBarChart2,   label: 'Reports'     },
+  { href: '/admin',               icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/admin/roster-import', icon: Upload,          label: 'Roster Import' },
+  { href: '/admin/employees',     icon: Users,           label: 'Students & Staff' },
+  { href: '/admin/attendance',    icon: Calendar,        label: 'Attendance' },
+  { href: '/admin/leave',         icon: Clock,           label: 'Leave' },
+  { href: '/admin/payroll',       icon: Wallet,          label: 'Payroll' },
+  { href: '/admin/reports',       icon: FileBarChart2,   label: 'Reports' },
 ];
 
 export default function AdminShell({ children }) {

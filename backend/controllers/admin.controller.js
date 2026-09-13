@@ -160,6 +160,8 @@ const addEmployee = async (req, res, next) => {
       throw new AppError('VALIDATION_ERROR', 'Missing required fields.', 400);
 
     const hash = await bcrypt.hash(password, 12);
+    const rawPassword = password || employee_id || 'Password123!';
+    const hash = await bcrypt.hash(rawPassword, 12);
     const employee = await Employee.create({
       employee_id,
       full_name,
@@ -168,6 +170,11 @@ const addEmployee = async (req, res, next) => {
       department_name: department_name || '',
       designation: designation || '',
       date_of_joining: new Date(date_of_joining),
+      phone: phone || '+1 555-0000',
+      department_name: department_name || 'General',
+      designation: designation || 'Student',
+      role: req.body.role || (designation?.toLowerCase().includes('faculty') ? 'teacher' : 'student'),
+      date_of_joining: date_of_joining ? new Date(date_of_joining) : new Date(),
       base_salary: base_salary || 0,
       password_hash: hash,
     });
@@ -179,6 +186,50 @@ const addEmployee = async (req, res, next) => {
   } catch (err) {
     if (err.code === 11000)
       return next(new AppError('DUPLICATE', 'Employee ID, email, or phone already exists.', 409));
+    next(err);
+  }
+};
+
+/* ─── POST /api/admin/employees/import ────────────────────── */
+const importRoster = async (req, res, next) => {
+  try {
+    const members = req.body.members || req.body.rows || [];
+    let count = 0;
+    
+    // Sample demo batch if empty or form upload
+    const rosterList = members.length > 0 ? members : (req.body.file ? [] : []);
+
+    for (const m of rosterList) {
+      const id = m.employee_id || m.roll_number || m.teacher_id;
+      if (!id) continue;
+
+      const rawPass = m.password || id || 'Password123!';
+      const hash = await bcrypt.hash(rawPass, 10);
+
+      await Employee.findOneAndUpdate(
+        { employee_id: id },
+        {
+          employee_id: id,
+          full_name: m.full_name || m.name || 'Member',
+          email: (m.email || `${id.toLowerCase()}@university.edu`).toLowerCase(),
+          phone: m.phone || '+1 555-0000',
+          department_name: m.department_name || m.department || 'General',
+          designation: m.designation || (m.role === 'teacher' ? 'Faculty' : 'Student'),
+          role: m.role || (m.designation?.toLowerCase().includes('faculty') ? 'teacher' : 'student'),
+          password_hash: hash,
+          is_active: true,
+        },
+        { upsert: true, new: true }
+      );
+      count++;
+    }
+
+    return res.json({
+      success: true,
+      count,
+      message: `Roster import complete. ${count} members processed. Default login password is their Roll/Staff ID or 'Password123!'.`,
+    });
+  } catch (err) {
     next(err);
   }
 };
@@ -305,6 +356,7 @@ module.exports = {
   getDashboard,
   getReports,
   addEmployee,
+  importRoster,
   getEmployees,
   deactivateEmployee,
   getAllLeaves,

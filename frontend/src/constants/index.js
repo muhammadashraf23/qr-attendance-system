@@ -1,9 +1,9 @@
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'Attendzo';
 
 export const ROLES = {
-  SUPER_ADMIN: 'super_admin',
-  HR_ADMIN: 'hr_admin',
-  EMPLOYEE: 'employee',
+  DEAN: 'dean',
+  TEACHER: 'teacher',
+  STUDENT: 'student',
 };
 
 export const ATTENDANCE_STATUS = {

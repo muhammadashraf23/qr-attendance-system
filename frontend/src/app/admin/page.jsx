@@ -44,9 +44,9 @@ export default function AdminDashboard() {
             <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? 'animate-spin' : ''}`} />
             Refresh
           </button>
-          <a href="/admin/employees/add" className="btn-primary text-sm py-2 px-3 flex items-center gap-1.5">
+          <a href="/admin/roster-import" className="bg-black hover:bg-zinc-800 text-white font-bold text-sm py-2 px-3.5 rounded-xl transition shadow-sm flex items-center gap-1.5">
             <UserPlus className="w-3.5 h-3.5" />
-            Add Employee
+            Roster Setup (Import / Add)
           </a>
         </div>
       </div>

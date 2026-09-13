@@ -54,8 +54,8 @@ export default function TeacherLectureQRPage() {
             <span className="bg-zinc-100 text-zinc-900 border border-zinc-300 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5">
               <BookOpen className="w-3.5 h-3.5 text-black" /> Faculty Portal
             </span>
-            <a href="/admin" className="text-xs font-bold text-zinc-600 hover:text-black transition">
-              Dashboard
+            <a href="/teacher/students" className="text-xs font-bold text-zinc-900 hover:text-black border border-zinc-200 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 bg-zinc-50">
+              <Users className="w-3.5 h-3.5 text-black" /> Manage Roster
             </a>
           </div>
         </div>

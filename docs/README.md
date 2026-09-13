@@ -47,3 +47,4 @@ Welcome to the official documentation package for **Attendzo**. This folder cont
 4. 👨‍🏫 **[`/teacher/lecture-qr`](file:///e:/Projects/qr-attendance-system/frontend/src/app/teacher/lecture-qr/page.jsx)** — Subject Lecture QR Generator & Live Classroom Feed.
 5. 📱 **[`/attend`](file:///e:/Projects/qr-attendance-system/frontend/src/app/attend/page.jsx)** — Student Attendance Kiosk (Campus GPS + Face Verification).
 6. 📈 **[`/admin/dashboard`](file:///e:/Projects/qr-attendance-system/frontend/src/app/admin/dashboard/page.jsx)** — Academic Analytics & Defaulters (<75% attendance rule).
+6. 📈 **[`/admin`](file:///e:/Projects/qr-attendance-system/frontend/src/app/admin/page.jsx)** — Academic Analytics & Defaulters (<75% attendance rule).

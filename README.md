@@ -63,7 +63,7 @@ flowchart TD
     end
 
     subgraph Dashboards ["Dedicated Role Dashboards"]
-        RegPortal -->|"Dean Signup"| DeanDash["/admin/dashboard - Campus & Defaulters"]
+        RegPortal -->|"Dean Signup"| DeanDash["/admin - Campus & Defaulters"]
         RegPortal -->|"Teacher Signup"| TeachDash["/teacher/lecture-qr - Lecture QR & Subject Feed"]
         RegPortal -->|"Student Signup"| StudDash["/activate-face - Student Face Activation"]
 

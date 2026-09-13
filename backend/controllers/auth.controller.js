@@ -131,14 +131,21 @@ const registerInstitution = async (req, res, next) => {
       name: admin_name || `${institution_name} Admin`,
       email: email.toLowerCase(),
       password_hash: hash,
-      role: 'super_admin',
+      role: req.body.role || 'dean',
     });
+
+    const token = jwt.sign(
+      { id: admin._id, name: admin.name, email: admin.email, role: admin.role, type: 'admin' },
+      env.JWT_SECRET,
+      { expiresIn: env.JWT_ADMIN_EXPIRES_IN || '8h' }
+    );
 
     const adminObj = admin.toObject();
     delete adminObj.password_hash;
 
     return res.status(201).json({
       success: true,
+      token,
       message: 'Institution workspace registered successfully.',
       admin: adminObj,
     });

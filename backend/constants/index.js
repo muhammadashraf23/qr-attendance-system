@@ -1,7 +1,7 @@
 const ROLES = {
-  SUPER_ADMIN: 'super_admin',
-  HR_ADMIN: 'hr_admin',
-  EMPLOYEE: 'employee',
+  DEAN: 'dean',
+  TEACHER: 'teacher',
+  STUDENT: 'student',
 };
 
 const ATTENDANCE_STATUS = {

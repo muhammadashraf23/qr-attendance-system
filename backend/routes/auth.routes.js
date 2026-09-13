@@ -6,7 +6,7 @@ const { authenticateAdmin, requireRole } = require('../middleware/auth.middlewar
 
 router.post('/login',                employeeLogin);
 router.post('/admin/login',          adminLogin);
-router.post('/register',             authenticateAdmin, requireRole('super_admin', 'hr_admin'), registerEmployee);
+router.post('/register',             authenticateAdmin, requireRole('dean', 'admin', 'super_admin', 'hr_admin'), registerEmployee);
 router.post('/register-institution', registerInstitution);
 
 module.exports = router;

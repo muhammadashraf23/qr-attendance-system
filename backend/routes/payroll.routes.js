@@ -5,7 +5,7 @@ const { authenticateAdmin, requireRole } = require('../middleware/auth.middlewar
 
 router.use(authenticateAdmin);
 
-router.post('/generate', requireRole('super_admin','hr_admin'), generatePayroll);
+router.post('/generate', requireRole('dean','admin','super_admin','hr_admin'), generatePayroll);
 router.get('/report',    getPayrollReport);
 router.get('/export',    getPayrollReport && exportPayroll);
 

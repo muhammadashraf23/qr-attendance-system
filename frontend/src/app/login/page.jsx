@@ -26,16 +26,18 @@ export default function LoginPage() {
           password: formData.password,
         });
         localStorage.setItem('admin_token', data.token);
+        localStorage.setItem('admin_data', JSON.stringify(data.admin || { name: 'Dean Admin', email: formData.identifier.trim() }));
         toast.success('Admin login successful!');
-        router.push('/admin/dashboard');
+        router.push('/admin');
       } else {
         const { data } = await api.post('/auth/login', {
           identifier: formData.identifier.trim(),
           password: formData.password,
         });
         localStorage.setItem('employee_token', data.token);
+        localStorage.setItem('employee_data', JSON.stringify(data.employee || data.user || { name: formData.identifier }));
         toast.success('Login successful!');
-        if (data.employee?.designation?.toLowerCase().includes('faculty') || data.employee?.designation?.toLowerCase().includes('teacher')) {
+        if (data.employee?.designation?.toLowerCase().includes('faculty') || data.employee?.designation?.toLowerCase().includes('teacher') || data.employee?.role === 'teacher') {
           router.push('/teacher/lecture-qr');
         } else {
           router.push('/activate-face');
