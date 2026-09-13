@@ -1,15 +1,20 @@
 # Software Requirement Specification (SRS) & SaaS Architecture
 ## Project: Attendzo — College & University SaaS Platform (Approach 2)
+# Software Requirement Specification (SRS) & Architecture
+## Project: Attendzo — College & University Attendance System
 
 ---
 
 ## 1. Executive Summary
 
 **Attendzo** is a specialized **Educational Attendance SaaS Platform** engineered for Colleges and Universities.
+**Attendzo** is an attendance system engineered for Colleges and Universities.
 
 Attendzo implements **Approach 2 (CSV Class Roster Import + 1-Click Student Face Activation)**:
+Attendzo implements a streamlined architecture:
 - **Faculty / Admin CSV Class Roster Import (`/admin/roster-import`)**: Teachers and administrators upload CSV roster files or click "Quick Import Sample Class" to seed student profiles automatically.
 - **1-Click Student Face Activation (`/activate-face`)**: Zero long forms for students! Students enter their Roll Number / ID, confirm identity, and snap a 3-second camera selfie to activate Face ID.
+- **Student Face Activation (`/activate-face`)**: Students enter their Roll Number / ID, confirm identity, and snap a camera selfie to activate Face ID.
 - **Subject Lecture QR Generator (`/teacher/lecture-qr`)**: Teachers project dynamic timed QR codes for specific courses (`CS101 Algorithms`), displayed on classroom screens.
 - **Academic Defaulter Analytics**: Automatic student attendance percentage tracking with real-time alerts for students falling below the mandatory **75% Exam Eligibility Threshold**.
 
