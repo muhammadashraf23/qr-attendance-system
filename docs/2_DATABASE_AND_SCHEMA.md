@@ -1,6 +1,4 @@
-# Database & Schema Documentation
-## Project: Attendzo — Educational SaaS Platform
-## Project: Attendzo — College & University SaaS Platform
+## Project: Attendzo — Attendance System
 
 ---
 

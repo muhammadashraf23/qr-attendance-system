@@ -53,7 +53,7 @@ export default function LoginPage() {
       {/* Header */}
       <header className="w-full border-b border-zinc-200 bg-white/80 backdrop-blur-xl sticky top-0 z-50 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Logo size={42} showText={true} />
+          <Logo size={42} />
           <a href="/register" className="text-xs font-bold text-zinc-700 hover:text-black transition">
             Create Account →
           </a>
@@ -65,7 +65,7 @@ export default function LoginPage() {
         <div className="w-full bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 shadow-xl animate-fade-in text-center">
           
           <div className="flex justify-center mb-6">
-            <Logo size={56} showText={true} />
+            <Logo size={56} />
           </div>
 
           <div className="mb-6">

@@ -1,45 +1,46 @@
 # Team Task Breakdown & Group Deliverables
-## Project: Attendzo — Educational SaaS Platform
-## Project: Attendzo — College & University SaaS Platform
+## Project: Attendzo — Attendance System
 
 ---
 
-## 1. Group Structure & Role Distribution (4 Members)
+## 1. Group Structure & Role Distribution (3 Members)
 
 ```
- ┌─────────────────────────────────────────────────────────────────┐
- │               MEMBER 1: SaaS Lead & Backend Arch                │
- │  • Express REST API, Multi-tenancy, JWT RBAC, Defaulter Engine │
- └─────────────────────────────────────────────────────────────────┘
-                                   │
- ┌─────────────────────────────────┴───────────────────────────────┐
- │                                                                 │
- ▼                                                                 ▼
-┌─────────────────────────────────┐       ┌────────────────────────────────┐
-│   MEMBER 2: Frontend & UI/UX    │       │ MEMBER 3: AI & PWA Feature Dev │
-│ • Next.js 14 Unified Portal,    │       │ • Teacher Lecture QR Engine,   │
-│   Recharts Dashboard, Tailwind  │       │   Face-api.js ML Kiosk, GPS    │
-│ • Next.js 14 CSV Roster Import, │       │ • Teacher Lecture QR Engine,   │
-│   1-Click Face Activation Portal│       │   Face-api.js ML Kiosk, GPS    │
-└─────────────────────────────────┘       └────────────────────────────────┘
-                                   │
-                                   ▼
- ┌─────────────────────────────────────────────────────────────────┐
- │            MEMBER 4: System Integration & Documentation         │
- │ • SRS, ERD, API Manuals, User Manual, Live Demo Script, QA     │
- └─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│              MUHAMMAD ASHRAF — Backend & Architecture           │
+│  • Express REST API, MongoDB Schemas, JWT Auth, Geofencing,     │
+│    Attendance Computation & Defaulter Engine Setup              │
+└─────────────────────────────────────────────────────────────────┘
+                                  │
+      ┌───────────────────────────┴───────────────────────────┐
+      │                                                       │
+      ▼                                                       ▼
+┌───────────────────────────────┐       ┌───────────────────────────────┐
+│  SHEHZAD NISAR — Frontend UI  │       │ MUHAMMAD UMER KAMRAN — Docs/QA│
+│ • Next.js 14 App Router,      │       │ • SRS, ERD, API Manuals,      │
+│   Tailwind B&W Design System, │       │   User Manuals, System        │
+│   Lecture QR & Kiosk Scanner  │       │   Testing & Quality Assurance │
+└───────────────────────────────┘       └───────────────────────────────┘
 ```
 
 ---
 
-## 2. Evaluation Rubric & Marks Mapping (30/30 Marks)
+## 2. Team Member Ownership & Deliverables
 
-| Pillar | Marks | Implementation Proof | Member Ownership |
+| Member Name | Role & Focus | Ownership & Technical Deliverables |
+|---|---|---|
+| **Muhammad Ashraf** | Backend Lead & System Architecture | Express REST API, MongoDB Database Schemas, JWT Authentication, Campus GPS Geofencing, Attendance Logging & 75% Defaulter Calculation Engine. |
+| **Shehzad Nisar** | Frontend Lead & UI/UX | Next.js 14 App Router Frontend, Tailwind CSS Global Monochrome Theme, Student/Teacher/Admin Portals, QR Scanner & Face Verification Kiosk UI. |
+| **Muhammad Umer Kamran** | Documentation, Testing & QA | SRS Document, ERD & Database Dictionary, API Technical Manual, User Manual & Live Demo Playbook, System Integration & Quality Assurance. |
+
+---
+
+## 3. Evaluation Rubric & Marks Mapping (30/30 Marks)
+
+| Evaluation Pillar | Marks | Implementation Proof | Primary Owner |
 |---|---|---|---|
-| **1. Multi-Tenant Educational SaaS** | 4 Marks | Unified Role Registration (`/register`), institution workspace setup, and campus settings. | Member 1 & Member 2 |
-| **2. Subject-Wise Lecture QR (Option B)** | 4 Marks | Teacher Lecture QR Generator (`/teacher/lecture-qr`) with countdown session timer & real-time feed. | Member 3 |
-| **1. Multi-Tenant Educational SaaS** | 4 Marks | CSV Roster Import (`/admin/roster-import`) and 1-Click Face Activation (`/activate-face`). | Member 1 & Member 2 |
-| **2. Subject-Wise Lecture QR (Option B)** | 4 Marks | Teacher Lecture QR Generator (`/teacher/lecture-qr`) with countdown session timer & live feed. | Member 3 |
-| **3. Touchless Kiosk & Geofencing** | 4 Marks | Student Kiosk (`/attend`) with server-validated Haversine campus GPS coordinates. | Member 3 |
-| **4. Academic Defaulter Analytics** | 4 Marks | Real-time student attendance % computation per subject, defaulter alerts (<75% exam eligibility rule), Excel export. | Member 1 & Member 2 |
-| **5. Code Quality & Security** | 4 Marks | bcrypt hashing, JWT token auth, rate limiters, Helmet HTTP security headers. | Member 1 & Member 2 |
+| **1. System Architecture & Backend API** | 6 Marks | REST API endpoints, JWT authentication, MongoDB schemas, geofencing. | **Muhammad Ashraf** |
+| **2. Touchless Kiosk & Lecture QR UI** | 6 Marks | Next.js 14 frontend, subject QR generator, face scanner kiosk UI, monochrome global theme. | **Shehzad Nisar** |
+| **3. Academic Defaulter Analytics (<75%)** | 4 Marks | Real-time student attendance percentage computation per subject, defaulter alerts, Excel exports. | **Muhammad Ashraf & Shehzad Nisar** |
+| **4. Code Quality & Security** | 4 Marks | bcrypt password hashing, JWT token authentication, input validation, clean error handling. | **Muhammad Ashraf & Shehzad Nisar** |
+| **5. Complete Documentation Suite & QA** | 10 Marks | SRS, ERD, API Manual, User Manual, Live Demo Script, end-to-end QA testing. | **Muhammad Umer Kamran** |

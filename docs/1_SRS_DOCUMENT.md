@@ -15,27 +15,27 @@ Attendzo implements **Approach 2 (CSV Class Roster Import + 1-Click Student Face
 
 ---
 
-## 2. Approach 2 Educational Architecture & Flow
+## 2. Educational Architecture & Flow
 
 ```mermaid
 flowchart TD
-    subgraph Step 1 [Faculty Roster Import]
-        T[Teacher / Admin /admin/roster-import] -->|Upload CSV Roster or Seed Sample| R[(Students DB)]
+    subgraph Step1 ["Step 1: Faculty Roster Import"]
+        T["Teacher / Admin /admin/roster-import"] -->|"Upload CSV Roster or Seed Sample"| R[(Students DB)]
     end
 
-    subgraph Step 2 [1-Click Student Face Activation]
-        S[Student /activate-face] -->|Input Roll Number| Conf[Confirm Identity]
-        Conf -->|Snap 3-sec Camera Selfie| FaceDB[(Face Embeddings DB)]
+    subgraph Step2 ["Step 2: Student Face Activation"]
+        S["Student /activate-face"] -->|"Input Roll Number"| Conf["Confirm Identity"]
+        Conf -->|"Snap Camera Selfie"| FaceDB[(Face Embeddings DB)]
     end
 
-    subgraph Step 3 [Lecture Attendance Check-In]
-        L[Teacher /teacher/lecture-qr] -->|Project CS101 Lecture QR| Kiosk[Student /attend Check-In]
-        Kiosk -->|Campus GPS + Face AI| LogDB[(Subject Attendance DB)]
+    subgraph Step3 ["Step 3: Lecture Attendance Check-In"]
+        L["Teacher /teacher/lecture-qr"] -->|"Project CS101 Lecture QR"| Kiosk["Student /attend Check-In"]
+        Kiosk -->|"Campus GPS + Face Verification"| LogDB[(Subject Attendance DB)]
     end
 
-    subgraph Step 4 [Academic Defaulters]
-        LogDB --> Analytics[Calculate Subject Attendance %]
-        Analytics --> Defaulter[Highlight Defaulters <75%]
+    subgraph Step4 ["Step 4: Academic Defaulters"]
+        LogDB --> Analytics["Calculate Subject Attendance %"]
+        Analytics --> Defaulter["Highlight Defaulters <75%"]
     end
 ```
 

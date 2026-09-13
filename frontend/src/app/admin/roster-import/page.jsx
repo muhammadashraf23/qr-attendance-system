@@ -55,7 +55,7 @@ export default function RosterImportPage() {
       {/* Header */}
       <header className="w-full border-b border-zinc-200 bg-white/80 backdrop-blur-xl sticky top-0 z-50 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Logo size={42} showText={true} />
+          <Logo size={42} />
           <div className="flex items-center gap-4">
             <a href="/activate-face" className="text-xs font-bold text-zinc-800 hover:text-black transition">
               Student Face Activation →
