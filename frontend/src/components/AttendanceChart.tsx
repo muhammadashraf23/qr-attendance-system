@@ -1,0 +1,180 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import {
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+import { format } from 'date-fns';
+
+const PIE_COLORS = ['#000000', '#27272a', '#3f3f46', '#52525b', '#71717a', '#a1a1aa', '#d4d4d8', '#e4e4e7'];
+
+function useIsMounted() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted;
+}
+
+export function AttendanceTrendChart({ data = [], loading }: { data?: any[]; loading?: boolean }) {
+  const mounted = useIsMounted();
+  if (loading || !mounted) return <ChartSkeleton />;
+
+  const formatted = data.map((d) => ({
+    ...d,
+    date: d.date ? format(new Date(d.date), 'dd MMM') : '',
+  }));
+
+  return (
+    <div className="p-6 rounded-3xl bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+      <h3 className="font-bold text-zinc-900 dark:text-zinc-100 mb-4 text-sm">30-Day Attendance Trend</h3>
+      <ResponsiveContainer width="100%" height={240}>
+        <AreaChart data={formatted} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+          <defs>
+            <linearGradient id="presentGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#10b981" stopOpacity={0.25} />
+              <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="absentGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.2} />
+              <stop offset="95%" stopColor="#f43f5e" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" />
+          <XAxis dataKey="date" tick={{ fontSize: 11 }} tickLine={false} />
+          <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
+          <Tooltip
+            contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
+          />
+          <Legend iconType="circle" iconSize={8} />
+          <Area
+            type="monotone"
+            dataKey="present"
+            name="Present"
+            stroke="#10b981"
+            fill="url(#presentGrad)"
+            strokeWidth={2}
+            dot={false}
+          />
+          <Area
+            type="monotone"
+            dataKey="absent"
+            name="Absent"
+            stroke="#f43f5e"
+            fill="url(#absentGrad)"
+            strokeWidth={2}
+            dot={false}
+          />
+          <Area
+            type="monotone"
+            dataKey="on_leave"
+            name="On Leave"
+            stroke="#71717a"
+            fill="none"
+            strokeWidth={1.5}
+            strokeDasharray="4 2"
+            dot={false}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+export function DepartmentChart({ data = [], loading }: { data?: any[]; loading?: boolean }) {
+  const mounted = useIsMounted();
+  if (loading || !mounted) return <ChartSkeleton />;
+
+  const formatted = data.map((d) => ({
+    name: d.name?.length > 10 ? d.name.slice(0, 10) + '…' : d.name,
+    Total: parseInt(d.total) || 0,
+    Present: parseInt(d.present) || 0,
+    Absent: (parseInt(d.total) || 0) - (parseInt(d.present) || 0),
+  }));
+
+  return (
+    <div className="p-6 rounded-3xl bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+      <h3 className="font-bold text-zinc-900 dark:text-zinc-100 mb-4 text-sm">Department Attendance Today</h3>
+      <ResponsiveContainer width="100%" height={240}>
+        <BarChart data={formatted} margin={{ top: 5, right: 10, left: -20, bottom: 0 }} barCategoryGap="30%">
+          <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" />
+          <XAxis dataKey="name" tick={{ fontSize: 11 }} tickLine={false} />
+          <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
+          <Tooltip
+            contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
+          />
+          <Legend iconType="circle" iconSize={8} />
+          <Bar dataKey="Present" fill="#18181b" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Absent" fill="#a1a1aa" radius={[4, 4, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+export function LeaveChart({ data = [], loading }: { data?: any[]; loading?: boolean }) {
+  const mounted = useIsMounted();
+  if (loading || !mounted) return <ChartSkeleton />;
+
+  const LABELS: Record<string, string> = { casual: 'Casual', sick: 'Sick', paid: 'Paid', other: 'Other' };
+  const pieData = Object.entries(
+    data.reduce((acc: Record<string, number>, d: any) => {
+      acc[d.leave_type] = (acc[d.leave_type] || 0) + 1;
+      return acc;
+    }, {})
+  ).map(([type, count]) => ({ name: LABELS[type] || type, value: count }));
+
+  if (!pieData.length) {
+    return (
+      <div className="p-6 rounded-3xl bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center h-40 text-zinc-400 text-sm">
+        No leave data to display
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-6 rounded-3xl bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+      <h3 className="font-bold text-zinc-900 dark:text-zinc-100 mb-4 text-sm">Leave by Type (This Month)</h3>
+      <ResponsiveContainer width="100%" height={220}>
+        <PieChart>
+          <Pie
+            data={pieData}
+            cx="50%"
+            cy="50%"
+            innerRadius={55}
+            outerRadius={90}
+            paddingAngle={3}
+            dataKey="value"
+            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+            labelLine={false}
+          >
+            {pieData.map((_, i) => (
+              <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+            ))}
+          </Pie>
+          <Tooltip contentStyle={{ borderRadius: 12, border: 'none' }} />
+          <Legend iconType="circle" iconSize={8} />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function ChartSkeleton() {
+  return (
+    <div className="p-6 rounded-3xl bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 animate-pulse">
+      <div className="h-4 w-40 bg-zinc-200 rounded mb-4" />
+      <div className="h-56 bg-zinc-100 dark:bg-zinc-900 rounded-xl" />
+    </div>
+  );
+}
