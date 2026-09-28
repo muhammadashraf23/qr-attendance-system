@@ -1,15 +1,15 @@
 const express = require('express');
 const router  = express.Router();
-const { checkIn, checkOut, getTodayStatus, getHistory, syncOffline } = require('../controllers/attendance.controller');
-const { authenticateEmployee } = require('../middleware/auth.middleware');
+const { clockIn, clockOut, getTodayStatus, getHistory, syncOffline } = require('../controllers/attendance.controller');
+const { authenticateMember } = require('../middleware/auth.middleware');
 
-// Public (QR scan — no login required)
-router.post('/check-in',  checkIn);
-router.post('/check-out', checkOut);
+// Public — QR scan kiosk sends member_id without a login token
+router.post('/clock-in',  clockIn);
+router.post('/clock-out', clockOut);
 
-// Protected
-router.get('/today',   authenticateEmployee, getTodayStatus);
-router.get('/history', authenticateEmployee, getHistory);
-router.post('/sync',   authenticateEmployee, syncOffline);
+// Protected — member must be logged in
+router.get('/today',    authenticateMember, getTodayStatus);
+router.get('/history',  authenticateMember, getHistory);
+router.post('/sync',    authenticateMember, syncOffline);
 
 module.exports = router;

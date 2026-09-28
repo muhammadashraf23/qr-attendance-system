@@ -6,11 +6,11 @@
  * This avoids sending raw camera frames over the network.
  */
 
-const { FaceEmbedding, Employee } = require('../models');
+const { FaceEmbedding, Member } = require('../models');
 const { AppError } = require('../utils/AppError');
 const env = require('../config/env');
 
-const CONFIDENCE_THRESHOLD = env.FACE_CONFIDENCE_THRESHOLD;
+const CONFIDENCE_THRESHOLD = env.FACE_CONFIDENCE_THRESHOLD || 0.85;
 
 /**
  * Cosine similarity between two embedding vectors.
@@ -18,48 +18,51 @@ const CONFIDENCE_THRESHOLD = env.FACE_CONFIDENCE_THRESHOLD;
  */
 function cosineSimilarity(a, b) {
   if (a.length !== b.length) return 0;
-  let dot = 0;
-  let normA = 0;
-  let normB = 0;
+  let dot = 0, normA = 0, normB = 0;
   for (let i = 0; i < a.length; i++) {
-    dot += a[i] * b[i];
+    dot  += a[i] * b[i];
     normA += a[i] * a[i];
     normB += b[i] * b[i];
   }
   return dot / (Math.sqrt(normA) * Math.sqrt(normB));
 }
 
-/* ─── POST /api/face/register ───────────────────────────── */
-const registerFace = async (req, res, next) => {
+/* ─── POST /api/face/activate  (Member — student/teacher) ── */
+const activateFace = async (req, res, next) => {
   try {
-    const { employee_id, embedding } = req.body;
+    // member_id from JWT (req.user) or from body (for admin-assist enrollment)
+    const member_id = req.user?.member_id || req.body.member_id;
+    const { embedding } = req.body;
 
-    if (!employee_id || !Array.isArray(embedding) || embedding.length < 128)
+    if (!member_id || !Array.isArray(embedding) || embedding.length < 128)
       throw new AppError(
         'VALIDATION_ERROR',
-        'employee_id and a valid embedding array (≥128 floats) are required.',
+        'member_id and a valid embedding array (≥128 floats) are required.',
         400
       );
 
-    // Verify employee
-    const emp = await Employee.findOne({ employee_id, is_active: true });
-    if (!emp) throw new AppError('NOT_FOUND', 'Employee not found.', 404);
+    // Verify member
+    const member = await Member.findOne({ member_id, is_active: true });
+    if (!member) throw new AppError('NOT_FOUND', 'Member not found.', 404);
 
     // Upsert the embedding
     const record = await FaceEmbedding.findOneAndUpdate(
-      { employee_id },
+      { employee_id: member_id },  // keep field name for FaceEmbedding schema compatibility
       { embedding, model_version: 'face-api-v1', is_active: true },
       { upsert: true, new: true }
     );
 
+    // Mark face_registered flag on the member
+    await Member.updateOne({ member_id }, { face_registered: true });
+
     return res.status(201).json({
       success: true,
-      message: 'Face embedding registered.',
+      message: 'Face activated successfully.',
       data: {
-        id: record._id,
-        employee_id: record.employee_id,
-        createdAt: record.createdAt,
-        updatedAt: record.updatedAt,
+        id:         record._id,
+        member_id,
+        createdAt:  record.createdAt,
+        updatedAt:  record.updatedAt,
       },
     });
   } catch (err) {
@@ -79,24 +82,23 @@ const verifyFace = async (req, res, next) => {
     const stored = await FaceEmbedding.find({ is_active: true }).lean();
     if (!stored.length) throw new AppError('NO_FACES', 'No registered faces in the system.', 400);
 
-    const empIds = stored.map((s) => s.employee_id);
-    const employees = await Employee.find({ employee_id: { $in: empIds }, is_active: true }).lean();
-    const empMap = new Map();
-    employees.forEach((e) => empMap.set(e.employee_id, e));
+    const memberIds = stored.map((s) => s.employee_id);
+    const members   = await Member.find({ member_id: { $in: memberIds }, is_active: true }).lean();
+    const memberMap = new Map();
+    members.forEach((m) => memberMap.set(m.member_id, m));
 
     // Find best match
     let bestMatch = null;
     let bestScore = 0;
 
     for (const row of stored) {
-      const emp = empMap.get(row.employee_id);
-      if (!emp) continue; // skip inactive employee
+      const member = memberMap.get(row.employee_id);
+      if (!member) continue;
 
-      const storedEmbedding = row.embedding;
-      const score = cosineSimilarity(embedding, storedEmbedding);
+      const score = cosineSimilarity(embedding, row.embedding);
       if (score > bestScore) {
         bestScore = score;
-        bestMatch = { ...row, full_name: emp.full_name };
+        bestMatch = { ...row, full_name: member.full_name, role: member.role };
       }
     }
 
@@ -111,13 +113,13 @@ const verifyFace = async (req, res, next) => {
       });
     }
 
-    // Return recognized employee info (caller will then do check-in)
     return res.json({
       success: true,
       message: `Face recognized: ${bestMatch.full_name}`,
       data: {
-        employee_id: bestMatch.employee_id,
-        employee_name: bestMatch.full_name,
+        member_id:   bestMatch.employee_id,
+        member_name: bestMatch.full_name,
+        role:        bestMatch.role,
         confidence,
       },
     });
@@ -126,4 +128,4 @@ const verifyFace = async (req, res, next) => {
   }
 };
 
-module.exports = { registerFace, verifyFace };
+module.exports = { activateFace, verifyFace };

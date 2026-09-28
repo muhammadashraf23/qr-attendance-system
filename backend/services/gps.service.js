@@ -1,7 +1,7 @@
 /**
  * GPS Location Verification Service
  * Uses the Haversine formula to calculate distance between two coordinates.
- * Dynamically queries office coordinates and radius from the database,
+ * Dynamically queries campus coordinates and radius from the database,
  * falling back to environment variables if not configured.
  */
 
@@ -27,37 +27,43 @@ function haversineDistance(lat1, lng1, lat2, lng2) {
 }
 
 /**
- * Returns true if the given coordinates are within the office GPS radius.
- * Reads office coordinates dynamically from the database.
+ * Returns true if the given coordinates are within the campus GPS radius.
+ * Reads campus coordinates dynamically from the database.
+ * Falls back to env vars: CAMPUS_LATITUDE, CAMPUS_LONGITUDE, CAMPUS_RADIUS.
  */
-async function isWithinOffice(lat, lng) {
-  let officeLat = env.OFFICE_LATITUDE;
-  let officeLng = env.OFFICE_LONGITUDE;
-  let radiusMeters = env.OFFICE_RADIUS;
+async function isOnCampus(lat, lng) {
+  let campusLat    = env.CAMPUS_LATITUDE  || env.OFFICE_LATITUDE;   // legacy fallback
+  let campusLng    = env.CAMPUS_LONGITUDE || env.OFFICE_LONGITUDE;
+  let radiusMeters = env.CAMPUS_RADIUS    || env.OFFICE_RADIUS;
 
   try {
     const settings = await SystemSetting.find({
-      key: { $in: ['office_lat', 'office_lng', 'gps_radius_meters'] },
+      key: { $in: ['campus_lat', 'campus_lng', 'campus_radius_meters',
+                   'office_lat', 'office_lng', 'gps_radius_meters'] }, // support both key names
     }).lean();
 
     const map = {};
-    settings.forEach((s) => {
-      map[s.key] = s.value;
-    });
+    settings.forEach((s) => { map[s.key] = s.value; });
 
-    if (map.office_lat) officeLat = parseFloat(map.office_lat);
-    if (map.office_lng) officeLng = parseFloat(map.office_lng);
-    if (map.gps_radius_meters) radiusMeters = parseFloat(map.gps_radius_meters);
-  } catch (err) {
+    if (map.campus_lat || map.office_lat)
+      campusLat = parseFloat(map.campus_lat || map.office_lat);
+    if (map.campus_lng || map.office_lng)
+      campusLng = parseFloat(map.campus_lng || map.office_lng);
+    if (map.campus_radius_meters || map.gps_radius_meters)
+      radiusMeters = parseFloat(map.campus_radius_meters || map.gps_radius_meters);
+  } catch {
     // If DB is temporarily unavailable, fall back to environment defaults
   }
 
-  const distance = haversineDistance(lat, lng, officeLat, officeLng);
+  const distance = haversineDistance(lat, lng, campusLat, campusLng);
   return {
-    allowed: distance <= radiusMeters,
-    distance: Math.round(distance),
-    officeRadius: radiusMeters,
+    allowed:      distance <= radiusMeters,
+    distance:     Math.round(distance),
+    campusRadius: radiusMeters,
   };
 }
 
-module.exports = { haversineDistance, isWithinOffice };
+// Legacy alias so any existing code calling isWithinOffice doesn't break
+const isWithinOffice = isOnCampus;
+
+module.exports = { haversineDistance, isOnCampus, isWithinOffice };

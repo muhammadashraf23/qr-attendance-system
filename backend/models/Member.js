@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-const employeeSchema = new mongoose.Schema(
+const memberSchema = new mongoose.Schema(
   {
-    employee_id: {
+    member_id: {
       type: String,
       required: true,
       unique: true,
@@ -24,10 +24,9 @@ const employeeSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
-      required: true,
-      unique: true,
+      required: false,
+      unique: false,
       trim: true,
-      index: true,
     },
     department: {
       type: mongoose.Schema.Types.ObjectId,
@@ -40,19 +39,29 @@ const employeeSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['teacher', 'student'],
+      enum: ['student', 'teacher', 'lab_assistant', 'hod'],
       default: 'student',
     },
-    designation: {
+    role_title: {
+      // e.g. "Senior Faculty", "BS Student", "Lab Demonstrator"
       type: String,
       default: '',
     },
-    date_of_joining: {
+    enrolled_at: {
+      // enrollment date for students, joining date for staff
       type: Date,
-      required: true,
       default: Date.now,
     },
-    base_salary: {
+    semester: {
+      type: String,
+      default: '',
+    },
+    batch_year: {
+      type: Number,
+      default: null,
+    },
+    monthly_stipend: {
+      // relevant for teachers only; 0 for students
       type: Number,
       default: 0,
     },
@@ -64,13 +73,17 @@ const employeeSchema = new mongoose.Schema(
       type: Number,
       default: 12,
     },
-    sick_leave_balance: {
+    medical_leave_balance: {
       type: Number,
       default: 10,
     },
-    paid_leave_balance: {
+    official_leave_balance: {
       type: Number,
       default: 15,
+    },
+    face_registered: {
+      type: Boolean,
+      default: false,
     },
     is_active: {
       type: Boolean,
@@ -86,5 +99,4 @@ const employeeSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.models.Employee || mongoose.model('Employee', employeeSchema);
-
+module.exports = mongoose.models.Member || mongoose.model('Member', memberSchema);

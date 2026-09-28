@@ -1,21 +1,25 @@
-const Department = require('./Department');
-const Employee = require('./Employee');
-const Admin = require('./Admin');
-const Attendance = require('./Attendance');
-const LeaveRequest = require('./LeaveRequest');
-const FaceEmbedding = require('./FaceEmbedding');
-const PayrollRecord = require('./PayrollRecord');
-const PublicHoliday = require('./PublicHoliday');
-const SystemSetting = require('./SystemSetting');
+const Department      = require('./Department');
+const Member          = require('./Member');
+const Staff           = require('./Staff');
+const Attendance      = require('./Attendance');
+const LeaveApplication = require('./LeaveApplication');
+const FaceEmbedding   = require('./FaceEmbedding');
+const StipendRecord   = require('./StipendRecord');
+const AcademicHoliday = require('./AcademicHoliday');
+const SystemSetting   = require('./SystemSetting');
+const LectureSession  = require('./LectureSession');
+const Subject         = require('./Subject');
 
 module.exports = {
   Department,
-  Employee,
-  Admin,
+  Member,
+  Staff,
   Attendance,
-  LeaveRequest,
+  LeaveApplication,
   FaceEmbedding,
-  PayrollRecord,
-  PublicHoliday,
+  StipendRecord,
+  AcademicHoliday,
   SystemSetting,
+  LectureSession,
+  Subject,
 };

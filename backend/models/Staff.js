@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-const adminSchema = new mongoose.Schema(
+const staffSchema = new mongoose.Schema(
   {
-    name: {
+    full_name: {
       type: String,
       required: true,
       trim: true,
@@ -21,7 +21,7 @@ const adminSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['dean', 'admin', 'super_admin', 'hr_admin', 'viewer'],
+      enum: ['dean', 'registrar', 'hod', 'it_admin', 'viewer'],
       default: 'dean',
     },
     is_active: {
@@ -38,5 +38,4 @@ const adminSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.models.Admin || mongoose.model('Admin', adminSchema);
-
+module.exports = mongoose.models.Staff || mongoose.model('Staff', staffSchema);

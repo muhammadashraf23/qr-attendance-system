@@ -1,10 +1,12 @@
-// routes/face.routes.js
 const express = require('express');
 const router  = express.Router();
-const { registerFace, verifyFace } = require('../controllers/face.controller');
-const { authenticateAdmin } = require('../middleware/auth.middleware');
+const { activateFace, verifyFace } = require('../controllers/face.controller');
+const { authenticateMember } = require('../middleware/auth.middleware');
 
-router.post('/register', authenticateAdmin, registerFace);
-router.post('/verify',   verifyFace);   // called from attendance page
+// Member activates their own face (student at /activate-face page)
+router.post('/activate', authenticateMember, activateFace);
+
+// Public face verification (kiosk compares embedding)
+router.post('/verify', verifyFace);
 
 module.exports = router;

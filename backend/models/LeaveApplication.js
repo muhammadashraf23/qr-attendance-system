@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-const leaveRequestSchema = new mongoose.Schema(
+const leaveApplicationSchema = new mongoose.Schema(
   {
-    employee_id: {
+    member_id: {
       type: String,
       required: true,
       index: true,
@@ -10,7 +10,7 @@ const leaveRequestSchema = new mongoose.Schema(
     },
     leave_type: {
       type: String,
-      enum: ['casual', 'sick', 'paid', 'other'],
+      enum: ['casual', 'medical', 'official', 'other'],
       required: true,
     },
     from_date: {
@@ -35,13 +35,13 @@ const leaveRequestSchema = new mongoose.Schema(
       default: 'pending',
       index: true,
     },
-    admin_comment: {
+    reviewer_comment: {
       type: String,
       default: null,
     },
     reviewed_by: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Admin',
+      ref: 'Staff',
       default: null,
     },
     reviewed_at: {
@@ -58,5 +58,6 @@ const leaveRequestSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.models.LeaveRequest || mongoose.model('LeaveRequest', leaveRequestSchema);
-
+module.exports =
+  mongoose.models.LeaveApplication ||
+  mongoose.model('LeaveApplication', leaveApplicationSchema);

@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
-const payrollRecordSchema = new mongoose.Schema(
+const stipendRecordSchema = new mongoose.Schema(
   {
-    employee_id: {
+    staff_id: {
+      // Only teaching staff receive stipends
       type: String,
       required: true,
       index: true,
@@ -18,7 +19,7 @@ const payrollRecordSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    base_salary: {
+    base_stipend: {
       type: Number,
       default: 0,
     },
@@ -42,10 +43,6 @@ const payrollRecordSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    overtime_bonus: {
-      type: Number,
-      default: 0,
-    },
     other_deductions: {
       type: Number,
       default: 0,
@@ -54,11 +51,11 @@ const payrollRecordSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    gross_salary: {
+    gross_stipend: {
       type: Number,
       default: 0,
     },
-    net_salary: {
+    net_stipend: {
       type: Number,
       default: 0,
     },
@@ -69,7 +66,7 @@ const payrollRecordSchema = new mongoose.Schema(
     },
     generated_by: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Admin',
+      ref: 'Staff',
       default: null,
     },
     generated_at: {
@@ -90,7 +87,8 @@ const payrollRecordSchema = new mongoose.Schema(
   }
 );
 
-payrollRecordSchema.index({ employee_id: 1, month: 1, year: 1 }, { unique: true });
+stipendRecordSchema.index({ staff_id: 1, month: 1, year: 1 }, { unique: true });
 
-module.exports = mongoose.models.PayrollRecord || mongoose.model('PayrollRecord', payrollRecordSchema);
-
+module.exports =
+  mongoose.models.StipendRecord ||
+  mongoose.model('StipendRecord', stipendRecordSchema);

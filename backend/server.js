@@ -1,8 +1,8 @@
-require("dotenv").config();
-const app = require("./app");
-const { connectDB } = require("./config/db");
-const seedAdmin = require("./scripts/seedAdmin");
-const env = require("./config/env");
+require('dotenv').config();
+const app       = require('./app');
+const { connectDB } = require('./config/db');
+const seedDean  = require('./scripts/seedDean');
+const env       = require('./config/env');
 
 const PORT = env.PORT || 5000;
 
@@ -10,16 +10,17 @@ async function start() {
   try {
     await connectDB();
 
-    // AUTO CREATE ADMIN
-    await seedAdmin();
+    // Seed default dean account + system settings on first run
+    await seedDean();
 
   } catch (err) {
-    console.error("❌ Database connection failed:", err.message);
+    console.error('❌ Database connection failed:', err.message);
     process.exit(1);
   }
 
   app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`🚀 Attendzo API running on port ${PORT}`);
+    console.log(`   Health: http://localhost:${PORT}/health`);
   });
 }
 

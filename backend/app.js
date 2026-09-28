@@ -1,15 +1,16 @@
-const express    = require('express');
-const cors       = require('cors');
-const helmet     = require('helmet');
-const morgan     = require('morgan');
-const rateLimit  = require('express-rate-limit');
+const express   = require('express');
+const cors      = require('cors');
+const helmet    = require('helmet');
+const morgan    = require('morgan');
+const rateLimit = require('express-rate-limit');
 
 const authRoutes       = require('./routes/auth.routes');
 const attendanceRoutes = require('./routes/attendance.routes');
 const faceRoutes       = require('./routes/face.routes');
 const leaveRoutes      = require('./routes/leave.routes');
-const adminRoutes      = require('./routes/admin.routes');
-const payrollRoutes    = require('./routes/payroll.routes');
+const deanRoutes       = require('./routes/dean.routes');
+const stipendRoutes    = require('./routes/stipend.routes');
+const lectureRoutes    = require('./routes/lecture.routes');
 const { errorHandler } = require('./middleware/error.middleware');
 const { logger }       = require('./utils/logger');
 
@@ -49,12 +50,12 @@ app.use(rateLimit({
 
 // ─── Auth rate limiter (stricter) ─────────────────────────────
 const authLimiter = rateLimit({
-  windowMs: 15 * 60_000,   // 15 minutes
+  windowMs: 15 * 60_000,
   max: 10,
   message: { success: false, error: 'RATE_LIMIT', message: 'Too many login attempts.' },
 });
 
-// ─── Attendance limiter (no-login QR endpoint) ────────────────
+// ─── Attendance / Lecture limiter ─────────────────────────────
 const attendLimiter = rateLimit({
   windowMs: 60_000,
   max: 20,
@@ -73,12 +74,13 @@ app.use(async (req, res, next) => {
 });
 
 // ─── Routes ───────────────────────────────────────────────────
-app.use('/api/auth',       authLimiter,   authRoutes);
-app.use('/api/attendance', attendLimiter, attendanceRoutes);
-app.use('/api/face',                      faceRoutes);
-app.use('/api/leave',                     leaveRoutes);
-app.use('/api/admin',                     adminRoutes);
-app.use('/api/payroll',                   payrollRoutes);
+app.use('/api/auth',        authLimiter,   authRoutes);
+app.use('/api/attendance',  attendLimiter, attendanceRoutes);
+app.use('/api/face',                       faceRoutes);
+app.use('/api/leave',                      leaveRoutes);
+app.use('/api/dean',                       deanRoutes);
+app.use('/api/stipend',                    stipendRoutes);
+app.use('/api/lecture',    attendLimiter,  lectureRoutes);
 
 // ─── Health ───────────────────────────────────────────────────
 app.get('/health', (_, res) => res.json({

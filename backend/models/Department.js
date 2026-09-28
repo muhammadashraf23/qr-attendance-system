@@ -8,9 +8,18 @@ const departmentSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
-    manager_id: {
+    hod_id: {
+      // Head of Department member_id
       type: String,
       default: null,
+    },
+    faculty_count: {
+      type: Number,
+      default: 0,
+    },
+    student_count: {
+      type: Number,
+      default: 0,
     },
   },
   {
@@ -19,4 +28,3 @@ const departmentSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.models.Department || mongoose.model('Department', departmentSchema);
-

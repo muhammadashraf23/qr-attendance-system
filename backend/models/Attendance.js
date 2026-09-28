@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const attendanceSchema = new mongoose.Schema(
   {
-    employee_id: {
+    member_id: {
       type: String,
       required: true,
       index: true,
@@ -13,11 +13,11 @@ const attendanceSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-    check_in_time: {
+    clock_in_time: {
       type: Date,
       default: null,
     },
-    check_out_time: {
+    clock_out_time: {
       type: Date,
       default: null,
     },
@@ -25,23 +25,19 @@ const attendanceSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    overtime_minutes: {
-      type: Number,
-      default: 0,
-    },
-    checkin_lat: {
+    clock_in_lat: {
       type: Number,
       default: null,
     },
-    checkin_lng: {
+    clock_in_lng: {
       type: Number,
       default: null,
     },
-    checkout_lat: {
+    clock_out_lat: {
       type: Number,
       default: null,
     },
-    checkout_lng: {
+    clock_out_lng: {
       type: Number,
       default: null,
     },
@@ -59,7 +55,7 @@ const attendanceSchema = new mongoose.Schema(
     },
     method: {
       type: String,
-      enum: ['qr', 'face', 'manual', 'offline_sync'],
+      enum: ['qr', 'face', 'manual', 'kiosk', 'offline_sync'],
       default: 'qr',
     },
     status: {
@@ -87,9 +83,9 @@ const attendanceSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    edited_by_admin: {
+    edited_by: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Admin',
+      ref: 'Staff',
       default: null,
     },
     edit_reason: {
@@ -106,8 +102,7 @@ const attendanceSchema = new mongoose.Schema(
   }
 );
 
-// Enforce one record per employee per date
-attendanceSchema.index({ employee_id: 1, date: 1 }, { unique: true });
+// Enforce one record per member per date
+attendanceSchema.index({ member_id: 1, date: 1 }, { unique: true });
 
 module.exports = mongoose.models.Attendance || mongoose.model('Attendance', attendanceSchema);
-

@@ -2,9 +2,9 @@ const jwt = require('jsonwebtoken');
 const { AppError } = require('../utils/AppError');
 
 /**
- * Verify JWT and attach decoded payload to req.user / req.admin
+ * Verify JWT and attach decoded payload to req.user (members) / req.staff (staff)
  */
-const authenticate = (type = 'employee') => (req, res, next) => {
+const authenticate = (type = 'member') => (req, res, next) => {
   const header = req.headers.authorization;
   if (!header?.startsWith('Bearer '))
     return next(new AppError('UNAUTHORIZED', 'Authentication token required.', 401));
@@ -15,7 +15,7 @@ const authenticate = (type = 'employee') => (req, res, next) => {
     if (decoded.type !== type)
       return next(new AppError('FORBIDDEN', `${type} token required.`, 403));
 
-    if (type === 'admin') req.admin = decoded;
+    if (type === 'staff') req.staff = decoded;
     else req.user = decoded;
     next();
   } catch (err) {
@@ -25,14 +25,25 @@ const authenticate = (type = 'employee') => (req, res, next) => {
   }
 };
 
-const authenticateEmployee = authenticate('employee');
-const authenticateAdmin    = authenticate('admin');
+const authenticateMember = authenticate('member');
+const authenticateStaff  = authenticate('staff');
 
-/** Require specific admin role(s) */
+/** Require specific staff role(s) */
 const requireRole = (...roles) => (req, res, next) => {
-  if (!roles.includes(req.admin?.role))
+  if (!roles.includes(req.staff?.role))
     return next(new AppError('FORBIDDEN', 'Insufficient permissions.', 403));
   next();
 };
 
-module.exports = { authenticateEmployee, authenticateAdmin, requireRole };
+// Keep legacy alias so any existing code that still says authenticateEmployee/authenticateAdmin
+// doesn't crash during a partial migration — remove once frontend is fully updated.
+const authenticateEmployee = authenticateMember;
+const authenticateAdmin    = authenticateStaff;
+
+module.exports = {
+  authenticateMember,
+  authenticateStaff,
+  authenticateEmployee,   // legacy alias
+  authenticateAdmin,      // legacy alias
+  requireRole,
+};
