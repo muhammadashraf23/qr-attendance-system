@@ -111,7 +111,6 @@ export default function ActivateFacePage() {
               <div>
                 <h1 className="text-2xl font-extrabold text-zinc-900">Activate Student Face ID</h1>
                 <p className="text-xs text-zinc-500 mt-1">
-                  Enter your Student Roll Number or ID to register your face.
                 </p>
               </div>
 
