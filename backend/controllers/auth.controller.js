@@ -158,7 +158,7 @@ const registerInstitution = async (req, res, next) => {
 const registerUser = async (req, res, next) => {
   try {
     const {
-      member_id,    // roll_number for students, staff_id for teachers
+      member_id,    // roll_number for students, staff_id for teachers and otters 
       full_name,
       email,
       phone,
