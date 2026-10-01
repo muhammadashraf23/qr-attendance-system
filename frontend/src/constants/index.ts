@@ -1,41 +1,74 @@
-export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'Attendzo';
-
-export const ROLES = {
-  DEAN: 'dean',
-  TEACHER: 'teacher',
-  STUDENT: 'student',
-  SUPER_ADMIN: 'super_admin',
-  ADMIN: 'admin',
-  EMPLOYEE: 'employee',
+export const API_ROUTES = {
+  AUTH: {
+    LOGIN: '/auth/login',
+    REGISTER: '/auth/register',
+    REGISTER_INSTITUTION: '/auth/register-institution',
+    REGISTER_USER: '/auth/register-user',
+    ADMIN_LOGIN: '/auth/admin/login',
+    STAFF_LOGIN: '/auth/staff/login',
+    USER_LOGIN: '/auth/user/login',
+    REFRESH: '/auth/refresh',
+    LOGOUT: '/auth/logout',
+  },
+  ATTENDANCE: {
+    CHECK_IN: '/attendance/check-in',
+    CHECK_OUT: '/attendance/check-out',
+    STATUS: (employeeId: string) => `/attendance/status/${employeeId}`,
+    TODAY: '/attendance/today',
+    HISTORY: '/attendance/history',
+    SYNC: '/attendance/sync',
+  },
+  FACE: {
+    REGISTER: '/face/register',
+    VERIFY: '/face/verify',
+  },
+  DEAN: {
+    DASHBOARD: '/dean/dashboard',
+    MEMBERS: '/dean/members',
+    ATTENDANCE: '/dean/attendance',
+    LEAVE: '/dean/leave',
+    STIPEND: '/dean/stipend',
+    REPORTS: '/dean/reports',
+    ROSTER_IMPORT: '/dean/roster-import',
+  },
+  ADMIN: {
+    DASHBOARD: '/admin/dashboard',
+    EMPLOYEES: '/admin/employees',
+    ATTENDANCE: '/admin/attendance',
+    LEAVE: '/admin/leave',
+    PAYROLL: '/admin/payroll',
+    REPORTS: '/admin/reports',
+    ROSTER_IMPORT: '/admin/roster-import',
+  },
 } as const;
 
-export type RoleType = typeof ROLES[keyof typeof ROLES];
-
-export const ATTENDANCE_STATUS = {
-  PRESENT: 'present',
-  ABSENT: 'absent',
-  LEAVE: 'leave',
-  HALF_DAY: 'half_day',
-  LATE: 'late',
-} as const;
-
-export type AttendanceStatusType = typeof ATTENDANCE_STATUS[keyof typeof ATTENDANCE_STATUS];
-
-export const ROUTES = {
+export const APP_ROUTES = {
   HOME: '/',
   LOGIN: '/login',
+  REGISTER: '/register',
   ATTEND: '/attend',
   ACTIVATE_FACE: '/activate-face',
+  DEAN: '/dean',
+  DEAN_MEMBERS: '/dean/members',
+  DEAN_ATTENDANCE: '/dean/attendance',
+  DEAN_LEAVE: '/dean/leave',
+  DEAN_STIPEND: '/dean/stipend',
+  DEAN_REPORTS: '/dean/reports',
+  DEAN_ROSTER_IMPORT: '/dean/roster-import',
+  STUDENT: '/student',
+  STUDENT_LEAVE: '/student/leave',
+  STUDENT_STIPEND: '/student/stipend',
   TEACHER_LECTURE_QR: '/teacher/lecture-qr',
   TEACHER_STUDENTS: '/teacher/students',
-  ADMIN: '/admin',
-  ADMIN_EMPLOYEES: '/admin/employees',
-  ADMIN_LEAVE: '/admin/leave',
-  ADMIN_PAYROLL: '/admin/payroll',
-  ADMIN_REPORTS: '/admin/reports',
-  ADMIN_ROSTER_IMPORT: '/admin/roster-import',
-  ADMIN_ATTENDANCE: '/admin/attendance',
-  EMPLOYEE: '/employee',
-  EMPLOYEE_LEAVE: '/employee/leave',
-  EMPLOYEE_PAYROLL: '/employee/payroll',
+  // Backward compatibility aliases
+  ADMIN: '/dean',
+  ADMIN_EMPLOYEES: '/dean/members',
+  ADMIN_LEAVE: '/dean/leave',
+  ADMIN_PAYROLL: '/dean/stipend',
+  ADMIN_REPORTS: '/dean/reports',
+  ADMIN_ROSTER_IMPORT: '/dean/roster-import',
+  ADMIN_ATTENDANCE: '/dean/attendance',
+  EMPLOYEE: '/student',
+  EMPLOYEE_LEAVE: '/student/leave',
+  EMPLOYEE_PAYROLL: '/student/stipend',
 } as const;

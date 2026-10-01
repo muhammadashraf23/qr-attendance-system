@@ -5,55 +5,73 @@ import { useRouter } from 'next/navigation';
 import api from '@/utils/api';
 import { saveTokenToIDB } from '@/utils/offlineDB';
 
-export interface EmployeeData {
+export interface UserData {
   _id?: string;
   id?: string;
-  employee_id: string;
+  user_id?: string;
+  employee_id?: string;
+  roll_number?: string;
   full_name: string;
+  name?: string;
   email: string;
   role: string;
   department_name?: string;
+  department?: string;
   designation?: string;
+  semester?: string | number;
   [key: string]: any;
 }
 
-export interface AdminData {
+export type EmployeeData = UserData;
+export type MemberData = UserData;
+
+export interface StaffData {
   _id?: string;
   id?: string;
   name: string;
   email: string;
   role: string;
+  department?: string;
+  designation?: string;
   [key: string]: any;
 }
 
-interface EmployeeAuthContextType {
-  employee: EmployeeData | null;
+export type AdminData = StaffData;
+
+interface UserAuthContextType {
+  user: UserData | null;
+  employee: UserData | null;
   login: (identifier: string, password: string) => Promise<void>;
   logout: () => void;
   loading: boolean;
 }
 
-interface AdminAuthContextType {
-  admin: AdminData | null;
+export type EmployeeAuthContextType = UserAuthContextType;
+
+interface StaffAuthContextType {
+  staff: StaffData | null;
+  admin: StaffData | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   loading: boolean;
 }
 
-const EmployeeAuthContext = createContext<EmployeeAuthContextType | null>(null);
+export type AdminAuthContextType = StaffAuthContextType;
 
-export function EmployeeAuthProvider({ children }: { children: React.ReactNode }) {
-  const [employee, setEmployee] = useState<EmployeeData | null>(null);
+const UserAuthContext = createContext<UserAuthContextType | null>(null);
+
+export function UserAuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
     try {
-      const token = localStorage.getItem('employee_token');
-      const data = localStorage.getItem('employee_data');
-      if (token && data) setEmployee(JSON.parse(data));
+      const token = localStorage.getItem('user_token') || localStorage.getItem('employee_token');
+      const data = localStorage.getItem('user_data') || localStorage.getItem('employee_data');
+      if (token && data) setUser(JSON.parse(data));
     } catch (e) {
-      console.error('Error loading employee session', e);
+      console.error('Error loading user session', e);
     } finally {
       setLoading(false);
     }
@@ -61,50 +79,72 @@ export function EmployeeAuthProvider({ children }: { children: React.ReactNode }
 
   const login = useCallback(
     async (identifier: string, password: string) => {
-      const { data } = await api.post('/auth/login', { identifier, password });
-      localStorage.setItem('employee_token', data.token);
-      localStorage.setItem('employee_data', JSON.stringify(data.employee));
-      await saveTokenToIDB(data.token).catch(() => {});
-      setEmployee(data.employee);
-      router.push('/employee');
+      let res;
+      try {
+        res = await api.post('/auth/user/login', { identifier, password });
+      } catch (err: any) {
+        if (err.response?.status === 404) {
+          res = await api.post('/auth/login', { identifier, password });
+        } else {
+          throw err;
+        }
+      }
+      const data = res.data;
+      const token = data.token;
+      const userData = data.user || data.employee || data.member;
+
+      localStorage.setItem('user_token', token);
+      localStorage.setItem('employee_token', token);
+      localStorage.setItem('user_data', JSON.stringify(userData));
+      localStorage.setItem('employee_data', JSON.stringify(userData));
+      await saveTokenToIDB(token).catch(() => {});
+      setUser(userData);
+      router.push('/student');
     },
     [router]
   );
 
   const logout = useCallback(() => {
+    localStorage.removeItem('user_token');
     localStorage.removeItem('employee_token');
+    localStorage.removeItem('user_data');
     localStorage.removeItem('employee_data');
-    setEmployee(null);
+    setUser(null);
     router.push('/login');
   }, [router]);
 
   return (
-    <EmployeeAuthContext.Provider value={{ employee, login, logout, loading }}>
+    <UserAuthContext.Provider value={{ user, employee: user, login, logout, loading }}>
       {children}
-    </EmployeeAuthContext.Provider>
+    </UserAuthContext.Provider>
   );
 }
 
-export const useEmployeeAuth = (): EmployeeAuthContextType => {
-  const ctx = useContext(EmployeeAuthContext);
-  if (!ctx) throw new Error('useEmployeeAuth must be inside EmployeeAuthProvider');
+export const EmployeeAuthProvider = UserAuthProvider;
+
+export const useUserAuth = (): UserAuthContextType => {
+  const ctx = useContext(UserAuthContext);
+  if (!ctx) throw new Error('useUserAuth must be inside UserAuthProvider');
   return ctx;
 };
 
-const AdminAuthContext = createContext<AdminAuthContextType | null>(null);
+export const useEmployeeAuth = useUserAuth;
+export const useStudentAuth = useUserAuth;
 
-export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
-  const [admin, setAdmin] = useState<AdminData | null>(null);
+const StaffAuthContext = createContext<StaffAuthContextType | null>(null);
+
+export function StaffAuthProvider({ children }: { children: React.ReactNode }) {
+  const [staff, setStaff] = useState<StaffData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
     try {
-      const token = localStorage.getItem('admin_token');
-      const data = localStorage.getItem('admin_data');
-      if (token && data) setAdmin(JSON.parse(data));
+      const token = localStorage.getItem('staff_token') || localStorage.getItem('admin_token');
+      const data = localStorage.getItem('staff_data') || localStorage.getItem('admin_data');
+      if (token && data) setStaff(JSON.parse(data));
     } catch (e) {
-      console.error('Error loading admin session', e);
+      console.error('Error loading staff session', e);
     } finally {
       setLoading(false);
     }
@@ -112,31 +152,54 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(
     async (email: string, password: string) => {
-      const { data } = await api.post('/auth/admin/login', { email, password });
-      localStorage.setItem('admin_token', data.token);
-      localStorage.setItem('admin_data', JSON.stringify(data.admin));
-      setAdmin(data.admin);
-      router.push('/admin');
+      let res;
+      try {
+        res = await api.post('/auth/staff/login', { email, password });
+      } catch (err: any) {
+        if (err.response?.status === 404) {
+          res = await api.post('/auth/admin/login', { email, password });
+        } else {
+          throw err;
+        }
+      }
+      const data = res.data;
+      const token = data.token;
+      const staffData = data.staff || data.admin;
+
+      localStorage.setItem('staff_token', token);
+      localStorage.setItem('admin_token', token);
+      localStorage.setItem('staff_data', JSON.stringify(staffData));
+      localStorage.setItem('admin_data', JSON.stringify(staffData));
+      setStaff(staffData);
+      router.push('/dean');
     },
     [router]
   );
 
   const logout = useCallback(() => {
+    localStorage.removeItem('staff_token');
     localStorage.removeItem('admin_token');
+    localStorage.removeItem('staff_data');
     localStorage.removeItem('admin_data');
-    setAdmin(null);
+    setStaff(null);
     router.push('/login');
   }, [router]);
 
   return (
-    <AdminAuthContext.Provider value={{ admin, login, logout, loading }}>
+    <StaffAuthContext.Provider value={{ staff, admin: staff, login, logout, loading }}>
       {children}
-    </AdminAuthContext.Provider>
+    </StaffAuthContext.Provider>
   );
 }
 
-export const useAdminAuth = (): AdminAuthContextType => {
-  const ctx = useContext(AdminAuthContext);
-  if (!ctx) throw new Error('useAdminAuth must be inside AdminAuthProvider');
+export const AdminAuthProvider = StaffAuthProvider;
+export const DeanAuthProvider = StaffAuthProvider;
+
+export const useStaffAuth = (): StaffAuthContextType => {
+  const ctx = useContext(StaffAuthContext);
+  if (!ctx) throw new Error('useStaffAuth must be inside StaffAuthProvider');
   return ctx;
 };
+
+export const useAdminAuth = useStaffAuth;
+export const useDeanAuth = useStaffAuth;

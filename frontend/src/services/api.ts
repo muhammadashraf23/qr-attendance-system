@@ -9,6 +9,8 @@ const api = axios.create({
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   if (typeof window !== 'undefined') {
     const token =
+      localStorage.getItem('staff_token') ||
+      localStorage.getItem('user_token') ||
       localStorage.getItem('employee_token') ||
       localStorage.getItem('admin_token') ||
       localStorage.getItem('token');
@@ -23,8 +25,12 @@ api.interceptors.response.use(
   (res) => res,
   (error) => {
     if (error.response?.status === 401 && typeof window !== 'undefined') {
+      localStorage.removeItem('staff_token');
+      localStorage.removeItem('user_token');
       localStorage.removeItem('employee_token');
       localStorage.removeItem('admin_token');
+      localStorage.removeItem('staff_data');
+      localStorage.removeItem('user_data');
       localStorage.removeItem('employee_data');
       localStorage.removeItem('admin_data');
       if (window.location.pathname !== '/login') {

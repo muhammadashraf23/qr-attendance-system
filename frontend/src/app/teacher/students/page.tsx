@@ -1,18 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { Upload, UserPlus, BookOpen, Users, FileSpreadsheet, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Upload, UserPlus, BookOpen, FileSpreadsheet, ArrowLeft } from 'lucide-react';
 import Logo from '@/components/shared/Logo';
 import api from '@/utils/api';
 
 export default function TeacherStudentRosterPage() {
-  const [tab, setTab] = useState('single'); // 'single' | 'bulk'
-  const [csvRole, setCsvRole] = useState('student'); // 'student' | 'teacher'
+  const [tab, setTab] = useState<'single' | 'bulk'>('single');
+  const [csvRole, setCsvRole] = useState<'student' | 'teacher'>('student');
   const [loading, setLoading] = useState(false);
-  const [csvFile, setCsvFile] = useState(null);
+  const [csvFile, setCsvFile] = useState<File | null>(null);
 
-  // Single Student Form State
   const [formData, setFormData] = useState({
     rollNo: '',
     fullName: '',
@@ -23,19 +22,39 @@ export default function TeacherStudentRosterPage() {
     role: 'student',
   });
 
-  const handleSingleSubmit = async (e) => {
+  const handleSingleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.post('/admin/employees', {
-        employee_id: formData.rollNo,
-        full_name: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        department_name: formData.department,
-        designation: `Student (${formData.courseCode})`,
-        role: 'student',
-      });
+      try {
+        await api.post('/dean/members', {
+          roll_number: formData.rollNo,
+          employee_id: formData.rollNo,
+          name: formData.fullName,
+          full_name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          department: formData.department,
+          department_name: formData.department,
+          designation: `Student (${formData.courseCode})`,
+          role: formData.role,
+        });
+      } catch (err: any) {
+        if (err.response?.status === 404) {
+          await api.post('/admin/employees', {
+            employee_id: formData.rollNo,
+            full_name: formData.fullName,
+            email: formData.email,
+            phone: formData.phone,
+            department_name: formData.department,
+            designation: `Student (${formData.courseCode})`,
+            role: formData.role,
+          });
+        } else {
+          throw err;
+        }
+      }
+
       toast.success(`Student ${formData.fullName} added to ${formData.courseCode} class roster!`);
       setFormData({
         rollNo: '',
@@ -46,14 +65,14 @@ export default function TeacherStudentRosterPage() {
         courseCode: 'CS101',
         role: 'student',
       });
-    } catch (err) {
+    } catch (err: any) {
       toast.error(err?.response?.data?.message || 'Failed to add student');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleBulkUpload = async (e) => {
+  const handleBulkUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!csvFile) {
       toast.error('Please select a CSV roster file first.');
@@ -63,12 +82,22 @@ export default function TeacherStudentRosterPage() {
     try {
       const data = new FormData();
       data.append('file', csvFile);
-      await api.post('/admin/employees/import', data, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      try {
+        await api.post('/dean/members/import', data, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+      } catch (err: any) {
+        if (err.response?.status === 404) {
+          await api.post('/admin/employees/import', data, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
+        } else {
+          throw err;
+        }
+      }
       toast.success('Class roster CSV imported successfully!');
       setCsvFile(null);
-    } catch (err) {
+    } catch (err: any) {
       toast.error(err?.response?.data?.message || 'CSV Import failed. Check formatting.');
     } finally {
       setLoading(false);
@@ -303,7 +332,7 @@ export default function TeacherStudentRosterPage() {
                   id="teacher-csv"
                   type="file"
                   accept=".csv"
-                  onChange={(e) => setCsvFile(e.target.files[0])}
+                  onChange={(e) => setCsvFile(e.target.files?.[0] || null)}
                   className="hidden"
                 />
                 <span className="text-zinc-400 text-xs block">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { UserCheck, ShieldCheck, ArrowRight, Scan, BookOpen } from 'lucide-react';
@@ -9,11 +9,11 @@ import api from '@/utils/api';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [role, setRole] = useState('admin'); // 'admin' (Dean) | 'employee' (Student/Faculty)
+  const [role, setRole] = useState<'admin' | 'employee'>('admin');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ identifier: '', password: '' });
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!formData.identifier.trim() || !formData.password)
       return toast.error('Please fill in all credentials.');
@@ -21,29 +21,67 @@ export default function LoginPage() {
     setLoading(true);
     try {
       if (role === 'admin') {
-        const { data } = await api.post('/auth/admin/login', {
-          email: formData.identifier.trim(),
-          password: formData.password,
-        });
+        let res;
+        try {
+          res = await api.post('/auth/staff/login', {
+            email: formData.identifier.trim(),
+            password: formData.password,
+          });
+        } catch (err: any) {
+          if (err.response?.status === 404) {
+            res = await api.post('/auth/admin/login', {
+              email: formData.identifier.trim(),
+              password: formData.password,
+            });
+          } else {
+            throw err;
+          }
+        }
+
+        const data = res.data;
+        const staffData = data.staff || data.admin || { name: 'Dean Admin', email: formData.identifier.trim() };
+        localStorage.setItem('staff_token', data.token);
         localStorage.setItem('admin_token', data.token);
-        localStorage.setItem('admin_data', JSON.stringify(data.admin || { name: 'Dean Admin', email: formData.identifier.trim() }));
+        localStorage.setItem('staff_data', JSON.stringify(staffData));
+        localStorage.setItem('admin_data', JSON.stringify(staffData));
         toast.success('Admin login successful!');
-        router.push('/admin');
+        router.push('/dean');
       } else {
-        const { data } = await api.post('/auth/login', {
-          identifier: formData.identifier.trim(),
-          password: formData.password,
-        });
+        let res;
+        try {
+          res = await api.post('/auth/user/login', {
+            identifier: formData.identifier.trim(),
+            password: formData.password,
+          });
+        } catch (err: any) {
+          if (err.response?.status === 404) {
+            res = await api.post('/auth/login', {
+              identifier: formData.identifier.trim(),
+              password: formData.password,
+            });
+          } else {
+            throw err;
+          }
+        }
+
+        const data = res.data;
+        const memberData = data.user || data.employee || data.member || { name: formData.identifier };
+        localStorage.setItem('user_token', data.token);
         localStorage.setItem('employee_token', data.token);
-        localStorage.setItem('employee_data', JSON.stringify(data.employee || data.user || { name: formData.identifier }));
+        localStorage.setItem('user_data', JSON.stringify(memberData));
+        localStorage.setItem('employee_data', JSON.stringify(memberData));
         toast.success('Login successful!');
-        if (data.employee?.designation?.toLowerCase().includes('faculty') || data.employee?.designation?.toLowerCase().includes('teacher') || data.employee?.role === 'teacher') {
+        if (
+          memberData.designation?.toLowerCase().includes('faculty') ||
+          memberData.designation?.toLowerCase().includes('teacher') ||
+          memberData.role === 'teacher'
+        ) {
           router.push('/teacher/lecture-qr');
         } else {
-          router.push('/activate-face');
+          router.push('/student');
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       toast.error(err.response?.data?.message || 'Invalid login credentials.');
     } finally {
       setLoading(false);
@@ -52,7 +90,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 flex flex-col justify-between relative overflow-hidden font-sans">
-      {/* Header */}
       <header className="w-full border-b border-zinc-200 bg-white/80 backdrop-blur-xl sticky top-0 z-50 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Logo size={42} />
@@ -62,10 +99,8 @@ export default function LoginPage() {
         </div>
       </header>
 
-      {/* Main Container */}
       <main className="flex-1 max-w-md w-full mx-auto p-4 sm:p-6 flex items-center justify-center relative z-10">
         <div className="w-full bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 shadow-xl animate-fade-in text-center">
-          
           <div className="flex justify-center mb-6">
             <Logo size={56} />
           </div>
@@ -75,7 +110,6 @@ export default function LoginPage() {
             <p className="text-xs text-zinc-500 mt-1">Access Dean Dashboard, Teacher QR Generator, or Student Portal</p>
           </div>
 
-          {/* Role Selector Tabs */}
           <div className="grid grid-cols-2 gap-2 mb-6 p-1.5 bg-zinc-100 border border-zinc-200 rounded-2xl">
             <button
               type="button"
@@ -115,7 +149,7 @@ export default function LoginPage() {
                 className="w-full bg-white border border-zinc-300 focus:border-black focus:ring-2 focus:ring-black/20 rounded-2xl px-4 py-3.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none transition"
                 placeholder={role === 'admin' ? 'dean@university.edu' : 'e.g. CS-2026-001 or TCH-901'}
                 value={formData.identifier}
-                onChange={e => setFormData({ ...formData, identifier: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, identifier: e.target.value })}
               />
             </div>
 
@@ -127,7 +161,7 @@ export default function LoginPage() {
                 className="w-full bg-white border border-zinc-300 focus:border-black focus:ring-2 focus:ring-black/20 rounded-2xl px-4 py-3.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none transition"
                 placeholder="••••••••"
                 value={formData.password}
-                onChange={e => setFormData({ ...formData, password: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />
             </div>
 
@@ -147,7 +181,6 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Direct Access Shortcuts */}
           <div className="mt-6 pt-4 border-t border-zinc-200 space-y-2 text-xs text-zinc-500">
             <div className="flex items-center justify-between">
               <span>Student Face Activation?</span>
@@ -168,12 +201,11 @@ export default function LoginPage() {
               </a>
             </div>
           </div>
-
         </div>
       </main>
 
       <footer className="w-full border-t border-zinc-200 bg-white px-6 py-4 text-xs text-zinc-500 text-center">
-        © 2026 Attendzo — Attendance System.
+        © 2026 Attendzo — Academic Attendance System.
       </footer>
     </div>
   );

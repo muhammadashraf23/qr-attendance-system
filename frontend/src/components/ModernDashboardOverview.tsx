@@ -175,6 +175,7 @@ export default function ModernDashboardOverview() {
                 </svg>
               </div>
               <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition">Scan & Punch In</h3>
+              <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition">Scan &amp; Punch In</h3>
               <p className="text-xs text-gray-500 mt-1">Student/Employee camera scan with instant GPS check</p>
             </Link>
 
@@ -192,7 +193,7 @@ export default function ModernDashboardOverview() {
             </Link>
 
             <Link
-              href="/admin/roster-import"
+              href="/dean/roster-import"
               className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md hover:border-sky-200 transition group"
             >
               <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center font-bold mb-3 group-hover:scale-105 transition">
@@ -201,7 +202,7 @@ export default function ModernDashboardOverview() {
                 </svg>
               </div>
               <h3 className="font-bold text-gray-900 group-hover:text-sky-600 transition">Bulk Roster CSV</h3>
-              <p className="text-xs text-gray-500 mt-1">Import 5,000+ students or corporate employees</p>
+              <p className="text-xs text-gray-500 mt-1">Import 5,000+ students or faculty members</p>
             </Link>
           </div>
 

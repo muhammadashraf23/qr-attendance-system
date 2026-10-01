@@ -8,14 +8,17 @@ const DB_VERSION = 1;
 
 export interface OfflineRecord {
   id?: number;
+  member_id?: string;
   employee_id?: string;
   roll_number?: string;
   method: string;
-  action: 'checkin' | 'checkout';
-  timestamp: string;
+  action?: 'checkin' | 'checkout' | string;
+  timestamp?: string;
+  date?: string;
   latitude?: number;
   longitude?: number;
   saved_at?: string;
+  [key: string]: any;
 }
 
 function openDB(): Promise<IDBDatabase> {
@@ -36,6 +39,32 @@ function openDB(): Promise<IDBDatabase> {
     req.onsuccess = (e: any) => resolve(e.target.result);
     req.onerror = (e: any) => reject(e.target.error);
   });
+}
+
+export async function saveTokenToIDB(token: string): Promise<void> {
+  try {
+    const db = await openDB();
+    const tx = db.transaction('auth', 'readwrite');
+    const store = tx.objectStore('auth');
+    store.put({ key: 'jwt_token', token });
+  } catch (err) {
+    console.warn('Could not cache token in IDB', err);
+  }
+}
+
+export async function getTokenFromIDB(): Promise<string | null> {
+  try {
+    const db = await openDB();
+    const tx = db.transaction('auth', 'readonly');
+    const store = tx.objectStore('auth');
+    return new Promise((resolve) => {
+      const req = store.get('jwt_token');
+      req.onsuccess = () => resolve(req.result?.token || null);
+      req.onerror = () => resolve(null);
+    });
+  } catch {
+    return null;
+  }
 }
 
 export async function savePendingRecord(record: OfflineRecord): Promise<number> {
